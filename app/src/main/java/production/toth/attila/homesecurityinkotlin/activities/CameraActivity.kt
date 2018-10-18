@@ -3,8 +3,7 @@ package production.toth.attila.homesecurityinkotlin.activities
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
 import android.hardware.Camera
 import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
@@ -22,10 +21,7 @@ import production.toth.attila.homesecurityinkotlin.CameraPreview
 import production.toth.attila.homesecurityinkotlin.ImageConsumer
 import production.toth.attila.homesecurityinkotlin.ManagePermissions
 import production.toth.attila.homesecurityinkotlin.R
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.BlockingQueue
@@ -126,7 +122,15 @@ class CameraActivity : AppCompatActivity() {
             }
 
             try {
-                val bitmap: Bitmap = BitmapFactory.decodeByteArray(previewPicture , 0, previewPicture.size, null)
+                val out = ByteArrayOutputStream()
+                val width: Int = mCamera?.parameters?.previewSize?.width as Int
+                val height: Int = mCamera?.parameters?.previewSize?.height as Int
+                val yuvImage = YuvImage(previewPicture,ImageFormat.NV21, width, height ,null)
+                yuvImage.compressToJpeg(Rect(0,0, width,height), 50, out)
+                val ujpreviewPicture = out.toByteArray()
+                val bitmap = BitmapFactory.decodeByteArray(ujpreviewPicture, 0, ujpreviewPicture.size)
+
+                //val bitmap: Bitmap = BitmapFactory.decodeByteArray(previewPicture , 0, previewPicture.size, null)
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             }catch (e: InterruptedException){
