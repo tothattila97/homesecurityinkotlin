@@ -4,27 +4,25 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.media.Image
 import android.util.Log
-import production.toth.attila.homesecurityinkotlin.network.RetrofitUploadImplementation
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.util.concurrent.BlockingQueue
 
 class ImageConsumer(
-        private var queue: BlockingQueue<Bitmap>,
-        private val activity: Activity
+        private var q: BlockingQueue<Bitmap>,
+        activity: Activity
 ): Runnable {
 
     val ImageConsumerTAG = "somethingHappened"
-    //lateinit var queue: BlockingQueue<Bitmap>
-    //private lateinit var previewQueue: BlockingQueue<ByteArray>
     private var first: Image? = null
     private var firstbitmap: Bitmap? = null
     private var second: Image? = null
     private var secondbitmap: Bitmap? = null
     var starttime: Long = 0
     var difference: Long = 0
-    private lateinit var a: Activity
+    private var a: Activity = activity
+    private var queue: BlockingQueue<Bitmap> = q
 
     /*private object Holder { val INSTANCE = ImageConsumer() }
 
@@ -32,7 +30,7 @@ class ImageConsumer(
         val instance: ImageConsumer by lazy { Holder.INSTANCE }
     }*/
 
-    lateinit var callback: IRingtoneCallback
+    var callback: IRingtoneCallback = activity as IRingtoneCallback
 
     /*fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
         callback = activity as IRingtoneCallback
@@ -49,9 +47,9 @@ class ImageConsumer(
                 starttime = System.currentTimeMillis()
                 val percent = getDifferenceInPercent(firstbitmap, secondbitmap)
                 if (percent > 3) {
-                    callback.playRingtone()
+                    //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
-                         RetrofitUploadImplementation(uploadFile)
+                         //RetrofitUploadImplementation(uploadFile)
                     }
                     //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
                     //RetrofitUploadImplementation(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.
@@ -122,6 +120,5 @@ class ImageConsumer(
 
     interface IRingtoneCallback {
         fun playRingtone()
-        fun sendRingtoneSignal()
     }
 }

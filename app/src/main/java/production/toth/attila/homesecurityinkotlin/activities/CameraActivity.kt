@@ -7,7 +7,7 @@ import android.graphics.*
 import android.hardware.Camera
 import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
-import android.os.Build
+import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
@@ -28,7 +28,9 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 
-class CameraActivity : AppCompatActivity() {
+
+
+class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
@@ -37,8 +39,9 @@ class CameraActivity : AppCompatActivity() {
     private val PermissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
     private lateinit var imageConsumer: ImageConsumer
-    private var previewPictures: BlockingQueue<Bitmap>  = LinkedBlockingQueue<Bitmap>()
+    private var previewPictures: BlockingQueue<Bitmap>  = LinkedBlockingQueue<Bitmap>(15)
     private var timeStart: Long = 0; private var timeDifference: Long = 0
+    private var isSupervisionStarted: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +59,12 @@ class CameraActivity : AppCompatActivity() {
         val focusModes: List<String>? = params?.supportedFocusModes
         if (focusModes?.contains(Camera.Parameters.FOCUS_MODE_AUTO) == true) {
             // Autofocus mode is supported
-            val params: Camera.Parameters? = mCamera?.parameters
-            params?.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
-            mCamera?.parameters = params
+            val parameters: Camera.Parameters? = mCamera?.parameters
+            parameters?.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
+            mCamera?.parameters = parameters
         }
+        params?.setPreviewSize(640,480)
+        mCamera?.parameters = params
         mCamera?.setFaceDetectionListener(MyFaceDetectionListener())
 
         mPreview = mCamera?.let {
@@ -71,15 +76,15 @@ class CameraActivity : AppCompatActivity() {
             val preview: FrameLayout = findViewById(R.id.camera_preview)
             preview.addView(it)
         }
+        managePermissions.checkPermissions()
 
         val captureButton: Button = findViewById(R.id.button_capture)
         captureButton.setOnClickListener {
-            // get an image from the camera
             timeStart = System.currentTimeMillis()
-            mCamera?.takePicture(null, null, mPicture)
+            isSupervisionStarted = true
+            val imageConsumerThread = Thread(imageConsumer)
+            imageConsumerThread.start()
         }
-        //mCamera?.setPreviewCallback(previewCallback)
-        managePermissions.checkPermissions()
     }
 
     /** Check if this device has a camera */
@@ -115,7 +120,7 @@ class CameraActivity : AppCompatActivity() {
 
     private val previewCallback = PreviewCallback { data, _ ->
         timeDifference = System.currentTimeMillis() - timeStart
-        if (timeDifference >= 500){
+        if (timeDifference >= 500 && isSupervisionStarted){
             val previewPicture: ByteArray = data ?: run {
                 Log.d(TAG, ("A camera preview kép kiolvasása nem sikerült, az értéke null"))
                 return@PreviewCallback
@@ -197,6 +202,17 @@ class CameraActivity : AppCompatActivity() {
 
     fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun playRingtone() {
+        try {
+            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val ringtone = RingtoneManager.getRingtone(applicationContext, notification)
+            ringtone.play()
+            //TODO: Valahol leállítani is a ringtonet stop()-al
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     internal class MyFaceDetectionListener : Camera.FaceDetectionListener {
