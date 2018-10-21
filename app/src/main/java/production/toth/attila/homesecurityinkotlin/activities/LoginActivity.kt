@@ -39,8 +39,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         signUpLink.setOnClickListener {
-            val signUpIntent = Intent(getApplicationContext(), SignUpActivity::class.java)
+            val signUpIntent = Intent(applicationContext, SignUpActivity::class.java)
             startActivityForResult(signUpIntent, REQUEST_SIGNUP)
+            finish()
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         }
     }
 

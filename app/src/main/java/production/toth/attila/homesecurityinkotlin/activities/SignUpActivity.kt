@@ -2,6 +2,7 @@ package production.toth.attila.homesecurityinkotlin.activities
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -11,9 +12,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.R
-
-
-
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -42,7 +40,10 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         loginLink.setOnClickListener {
+            val loginIntent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(loginIntent)
             finish()
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         }
     }
 
