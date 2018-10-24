@@ -7,6 +7,9 @@ import android.graphics.*
 import android.hardware.Camera
 import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Environment
@@ -17,18 +20,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
-import production.toth.attila.homesecurityinkotlin.CameraPreview
-import production.toth.attila.homesecurityinkotlin.ImageConsumer
-import production.toth.attila.homesecurityinkotlin.ManagePermissions
-import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.*
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
-
-
-
 
 class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
 
@@ -43,64 +40,16 @@ class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
     private var timeStart: Long = 0; private var timeDifference: Long = 0
     private var isSupervisionStarted: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
+    private val RECORDER_SAMPLERATE = 8000
+    private val RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO
+    private val RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
+    private var recorder: AudioRecord? = null
+    private val bufferElementsToRec = 1024 // want to play 2048 (2K) since 2 bytes we use only 1024
+    private val bytesPerElement = 2 // 2 bytes in 16bit format
+    private lateinit var audioConsumer: AudioConsumer
+    private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
+    private var audioConsumerThread: Thread? = null
 
-        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
-
-        imageConsumer = ImageConsumer(previewPictures, this)
-
-        // Create an instance of Camera
-        mCamera = getCameraInstance()
-
-        val params: Camera.Parameters? = mCamera?.parameters
-        val focusModes: List<String>? = params?.supportedFocusModes
-        if (focusModes?.contains(Camera.Parameters.FOCUS_MODE_AUTO) == true) {
-            // Autofocus mode is supported
-            val parameters: Camera.Parameters? = mCamera?.parameters
-            parameters?.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
-            mCamera?.parameters = parameters
-        }
-        params?.setPreviewSize(640,480)
-        mCamera?.parameters = params
-        mCamera?.setFaceDetectionListener(MyFaceDetectionListener())
-
-        mPreview = mCamera?.let {
-            // Create our Preview view
-            CameraPreview(this, it, previewCallback)
-        }
-        // Set the Preview view as the content of our activity.
-        mPreview?.also {
-            val preview: FrameLayout = findViewById(R.id.camera_preview)
-            preview.addView(it)
-        }
-        managePermissions.checkPermissions()
-
-        val captureButton: Button = findViewById(R.id.button_capture)
-        captureButton.setOnClickListener {
-            timeStart = System.currentTimeMillis()
-            isSupervisionStarted = true
-            val imageConsumerThread = Thread(imageConsumer)
-            imageConsumerThread.start()
-        }
-    }
-
-    /** Check if this device has a camera */
-    private fun checkCameraHardware(context: Context): Boolean {
-        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-    }
-
-    /** A safe way to get an instance of the Camera object. */
-    fun getCameraInstance(): Camera? {
-        return try {
-            Camera.open() // attempt to get a Camera instance
-        } catch (e: Exception) {
-            // Camera is not available (in use or does not exist)
-            null // returns null if camera is unavailable
-        }
-    }
     private val mPicture = PictureCallback { data, _ ->
         val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
             Log.d(TAG, ("Error creating media file, check storage permissions"))
@@ -144,8 +93,65 @@ class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
         }
     }
 
-    //val MEDIA_TYPE_IMAGE = 1
-    //val MEDIA_TYPE_VIDEO = 2
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_camera)
+
+        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
+
+        imageConsumer = ImageConsumer(previewPictures, this)
+        audioConsumer = AudioConsumer(audiosInByteArray, this)
+
+        // Create an instance of Camera
+        mCamera = getCameraInstance()
+
+        val params: Camera.Parameters? = mCamera?.parameters
+        val focusModes: List<String>? = params?.supportedFocusModes
+        if (focusModes?.contains(Camera.Parameters.FOCUS_MODE_AUTO) == true) {
+            // Autofocus mode is supported
+            val parameters: Camera.Parameters? = mCamera?.parameters
+            parameters?.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
+            mCamera?.parameters = parameters
+        }
+        params?.setPreviewSize(640,480)
+        mCamera?.parameters = params
+        mCamera?.setFaceDetectionListener(MyFaceDetectionListener())
+
+        mPreview = mCamera?.let {
+            // Create our Preview view
+            CameraPreview(this, it, previewCallback)
+        }
+        // Set the Preview view as the content of our activity.
+        mPreview?.also {
+            val preview: FrameLayout = findViewById(R.id.camera_preview)
+            preview.addView(it)
+        }
+        managePermissions.checkPermissions()
+
+        val captureButton: Button = findViewById(R.id.button_capture)
+        captureButton.setOnClickListener {
+            timeStart = System.currentTimeMillis()
+            isSupervisionStarted = true
+            val imageConsumerThread = Thread(imageConsumer)
+            imageConsumerThread.start()
+        }
+    }
+
+    /** Check if this device has a camera */
+    private fun checkCameraHardware(context: Context): Boolean {
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+    }
+
+    /** A safe way to get an instance of the Camera object. */
+    private fun getCameraInstance(): Camera? {
+        return try {
+            Camera.open() // attempt to get a Camera instance
+        } catch (e: Exception) {
+            // Camera is not available (in use or does not exist)
+            null // returns null if camera is unavailable
+        }
+    }
 
     /** Create a File for saving an image or video */
     private fun getOutputMediaFile(type: Int): File? {
@@ -182,8 +188,7 @@ class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             PermissionsRequestCode ->{
                 val isPermissionsGranted = managePermissions
@@ -200,7 +205,7 @@ class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
         }
     }
 
-    fun Context.toast(message: String) {
+    private fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -212,6 +217,25 @@ class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
             //TODO: Valahol leállítani is a ringtonet stop()-al
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun startRecording(){
+        recorder = AudioRecord(MediaRecorder.AudioSource.MIC,
+                RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+                RECORDER_AUDIO_ENCODING, bufferElementsToRec * bytesPerElement)
+
+        recorder?.startRecording()
+        audioConsumerThread = Thread(audioConsumer)
+        audioConsumerThread?.start()
+    }
+
+    private fun stopRecording(){
+        if(recorder != null){
+            recorder?.stop();
+            recorder?.release();
+            recorder = null;
+            audioConsumerThread = null;
         }
     }
 

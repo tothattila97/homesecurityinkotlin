@@ -35,7 +35,9 @@ class LoginActivity : AppCompatActivity() {
         signUpLink = findViewById(R.id.link_signup)
 
         loginButton.setOnClickListener {
-            login();
+            //login();
+            val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+            startActivity(cameraIntent)
         }
 
         signUpLink.setOnClickListener {

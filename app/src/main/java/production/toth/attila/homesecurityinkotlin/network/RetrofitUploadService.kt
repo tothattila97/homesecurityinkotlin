@@ -12,4 +12,11 @@ interface RetrofitUploadService {
     @Multipart
     @POST("api/upload/")
     abstract fun postImage(@Part image: MultipartBody.Part, @Part("name") name: RequestBody): Call<ResponseBody>
+
+    @POST("api/account/login")
+    fun loginUser()
+
+    @POST("api/account/signup")
+    fun signUpUser()
+
 }
