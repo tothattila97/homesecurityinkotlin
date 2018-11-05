@@ -93,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
         moveTaskToBack(true)
     }
 
+    //TODO: Sikeres bejelentkezés esetén a felhasználó adatait SharedPreferencesbe kell tenni
     private fun onLoginSuccess() {
         loginButton.isEnabled = true
         finish()
