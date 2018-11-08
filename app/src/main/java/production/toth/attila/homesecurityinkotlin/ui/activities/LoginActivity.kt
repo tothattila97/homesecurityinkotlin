@@ -1,7 +1,8 @@
-package production.toth.attila.homesecurityinkotlin.activities
+package production.toth.attila.homesecurityinkotlin.ui.activities
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,8 +13,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
+import production.toth.attila.homesecurityinkotlin.network.RetrofitUploadImplementation
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity() : AppCompatActivity() {
 
     companion object {
         val TAG = "LoginActivity"
@@ -68,6 +71,9 @@ class LoginActivity : AppCompatActivity() {
         val password = passwordText.text.toString()
 
         // TODO: Implement your own authentication logic here.
+        val loginService = RetrofitUploadImplementation()
+        val loginModel = UserLoginModel(email,password)
+        loginService.login(loginModel)
 
         Handler().postDelayed(
                 {
@@ -81,9 +87,17 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == Activity.RESULT_OK) {
-                // TODO: Implement successful signUp logic here
+                // TODO: Implement successful signUp logic here , SharedPreferencesbe menteni a felhasználó adatait és átnavigálni a CameraActivityre
                 // By default we just finish the Activity and log them in automatically
-                this.finish()
+                val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+                val editor  = userLogin.edit()
+                editor.clear()
+                editor.putString("userName", emailText.text.toString())
+                editor.putString("password", passwordText.text.toString())
+                editor.apply()  // editor.commit()
+                val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+                startActivity(cameraIntent)
+                //this.finish()
             }
         }
     }
@@ -96,6 +110,14 @@ class LoginActivity : AppCompatActivity() {
     //TODO: Sikeres bejelentkezés esetén a felhasználó adatait SharedPreferencesbe kell tenni
     private fun onLoginSuccess() {
         loginButton.isEnabled = true
+        val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+        val editor  = userLogin.edit()
+        editor.clear()
+        editor.putString("userName", emailText.text.toString())
+        editor.putString("password", passwordText.text.toString())
+        editor.apply()  // editor.commit()
+        val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+        startActivity(cameraIntent)
         finish()
     }
 

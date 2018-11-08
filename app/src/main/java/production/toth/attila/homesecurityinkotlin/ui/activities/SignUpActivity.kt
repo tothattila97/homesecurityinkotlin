@@ -1,4 +1,4 @@
-package production.toth.attila.homesecurityinkotlin.activities
+package production.toth.attila.homesecurityinkotlin.ui.activities
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -10,11 +10,16 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.*
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.models.Gender
+import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
+import production.toth.attila.homesecurityinkotlin.network.RetrofitUploadImplementation
 import java.text.DateFormat
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity() : AppCompatActivity() {
 
     companion object {
         val TAG = "SignUpActivity"
@@ -54,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
             birthCalendar.set(Calendar.YEAR, year)
             birthCalendar.set(Calendar.MONTH, monthOfYear)
             birthCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            refreshBirthEditText()
+            dateOfBirth.setText(convertDateToString(birthCalendar.time))
         }
 
         dateOfBirth.setOnClickListener {
@@ -93,8 +98,19 @@ class SignUpActivity : AppCompatActivity() {
         val name = nameText.text.toString()
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
+        val confirmPassword = confirmPasswordText.text.toString()
+        val dateOfBirth = convertStringToZonedDateTime(dateOfBirth.text.toString())
+        var gender: Gender = Gender.Default
+        when(genderRadioGroup.checkedRadioButtonId){
+            R.id.gender_man -> gender = Gender.Man
+            R.id.gender_woman -> gender = Gender.Woman
+            R.id.gender_notBinary -> gender = Gender.NotBinary
+        }
 
         // TODO: Implement your own signup logic here.
+        val signupService = RetrofitUploadImplementation()
+        val signupModel = UserSignUpModel(email, name, password,confirmPassword,dateOfBirth, gender)
+        signupService.signup(signupModel)
 
         Handler().postDelayed(
                 {
@@ -123,6 +139,7 @@ class SignUpActivity : AppCompatActivity() {
         val name = nameText.text.toString()
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
+        val confirmPassword = confirmPasswordText.text.toString()
 
         if (name.isEmpty() || name.length < 3) {
             nameText.error = "at least 3 characters"
@@ -145,11 +162,27 @@ class SignUpActivity : AppCompatActivity() {
             passwordText.error = null
         }
 
+        if(confirmPassword.isEmpty() || confirmPassword.length < 4 || confirmPassword.length > 10){
+            confirmPasswordText.error = "between 4 and 10 alphanumeric characters"
+            valid = false
+        }
+        else if(!confirmPassword.equals(password)) {
+            confirmPasswordText.error = "password and confirmpassword must be the same"
+            valid = false
+        } else { confirmPasswordText.error = null}
+
+
         return valid
     }
 
-    private fun refreshBirthEditText(){
+    private fun convertDateToString(date: Date): String{
         val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ENGLISH)
-        dateOfBirth.setText(dateFormat.format(birthCalendar.time))
+        return dateFormat.format(date)
+    }
+
+    private fun convertStringToZonedDateTime(timeInString : String): ZonedDateTime{
+        val pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS"
+        val Parser = DateTimeFormatter.ofPattern(pattern)
+        return ZonedDateTime.parse(timeInString, Parser)
     }
 }

@@ -49,7 +49,8 @@ class ImageConsumer(
                 if (percent > 3) {
                     //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
-                         //RetrofitUploadImplementation(uploadFile)
+                        //val networkService = RetrofitUploadImplementation()
+                        //networkService.uploadImage(uploadFile)
                     }
                     //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
                     //RetrofitUploadImplementation(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.

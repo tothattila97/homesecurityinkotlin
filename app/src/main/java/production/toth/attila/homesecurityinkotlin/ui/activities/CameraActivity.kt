@@ -1,4 +1,4 @@
-package production.toth.attila.homesecurityinkotlin.activities
+package production.toth.attila.homesecurityinkotlin.ui.activities
 
 import android.Manifest
 import android.content.Context
