@@ -29,4 +29,7 @@ interface RetrofitUploadService {
 
     @GET("api/account/changepassword")
     abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
+
+    @DELETE ("api/account/deleteaccount")
+    abstract fun deleteAccount(): Call<ResponseBody>
 }

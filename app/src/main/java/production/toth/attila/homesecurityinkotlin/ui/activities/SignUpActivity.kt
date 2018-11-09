@@ -29,6 +29,7 @@ class SignUpActivity() : AppCompatActivity() {
     lateinit var emailText: EditText
     lateinit var passwordText: EditText
     lateinit var confirmPasswordText: EditText
+    lateinit var phoneNumber: EditText
     lateinit var dateOfBirth: EditText
     lateinit var genderRadioGroup: RadioGroup
     lateinit var manGenderRadio: RadioButton
@@ -46,6 +47,7 @@ class SignUpActivity() : AppCompatActivity() {
         emailText = findViewById(R.id.input_email)
         passwordText= findViewById(R.id.input_password)
         confirmPasswordText = findViewById(R.id.input_confirm_password)
+        phoneNumber = findViewById(R.id.input_notifiable_phonenumber)
         dateOfBirth = findViewById(R.id.input_dateOfBirth)
         genderRadioGroup = findViewById(R.id.gender_radioGroup)
         manGenderRadio = findViewById(R.id.gender_man)
@@ -99,6 +101,7 @@ class SignUpActivity() : AppCompatActivity() {
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
         val confirmPassword = confirmPasswordText.text.toString()
+        val phoneNumber = phoneNumber.text.toString()
         val dateOfBirth = convertStringToZonedDateTime(dateOfBirth.text.toString())
         var gender: Gender = Gender.Default
         when(genderRadioGroup.checkedRadioButtonId){
@@ -109,7 +112,7 @@ class SignUpActivity() : AppCompatActivity() {
 
         // TODO: Implement your own signup logic here.
         val signupService = RetrofitUploadImplementation()
-        val signupModel = UserSignUpModel(email, name, password,confirmPassword,dateOfBirth, gender)
+        val signupModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
         signupService.signup(signupModel)
 
         Handler().postDelayed(

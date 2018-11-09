@@ -34,8 +34,8 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     private var mPreview: CameraPreview? = null
     private val TAG: String = "CameraActivityTag"
 
-    private val PermissionsRequestCode = 123
-    private lateinit var managePermissions: ManagePermissions
+    //private val PermissionsRequestCode = 123
+    //private lateinit var managePermissions: ManagePermissions
     private lateinit var imageConsumer: ImageConsumer
     private var previewPictures: BlockingQueue<Bitmap> = LinkedBlockingQueue<Bitmap>(15)
     private var timeStart: Long = 0; private var timeDifference: Long = 0
@@ -50,7 +50,7 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     private lateinit var audioConsumer: AudioConsumer
     private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
     private var audioConsumerThread: Thread? = null
-    private lateinit var bottomNavigationView: BottomNavigationView
+    var rootview: View? = null
 
     private val mPicture = Camera.PictureCallback { data, _ ->
         val pictureFile: File = getOutputMediaFile(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
@@ -99,8 +99,8 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        managePermissions = ManagePermissions(activity as TestActivity,list,PermissionsRequestCode)
+        //val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        //managePermissions = ManagePermissions(activity as TestActivity,list,PermissionsRequestCode)
 
         imageConsumer = ImageConsumer(previewPictures, this)
         audioConsumer = AudioConsumer(audiosInByteArray, this)
@@ -118,22 +118,24 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
         }
         params?.setPreviewSize(640,480)
         mCamera?.parameters = params
+        mCamera?.setDisplayOrientation(90)
         mCamera?.setFaceDetectionListener(MyFaceDetectionListener())
 
         mPreview = mCamera?.let {
             // Create our Preview view
             CameraPreview(context, it, previewCallback)
         }
-        managePermissions.checkPermissions()
+        //managePermissions.checkPermissions()
 
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootview = inflater?.inflate(R.layout.fragment_camera, container, false)
+        rootview = inflater?.inflate(R.layout.fragment_camera, container, false)
 
         // Set the Preview view as the content of our activity.
         mPreview?.also {
             val preview: FrameLayout = rootview!!.findViewById(R.id.camera_preview)
+            //if(it.parent != null) { (it.parent as ViewGroup).removeView(it)}
             preview.addView(it)
         }
 
@@ -146,6 +148,18 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
         }
 
         return rootview
+    }
+
+    override fun onPause() {
+        super.onPause()
+        releaseCamera()
+    }
+
+    fun releaseCamera() {
+        if(mCamera != null){
+            mCamera?.release()
+            mCamera = null
+        }
     }
 
     /** Check if this device has a camera */
@@ -198,7 +212,7 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             PermissionsRequestCode ->{
                 val isPermissionsGranted = managePermissions
@@ -213,7 +227,7 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
                 return
             }
         }
-    }
+    }*/
 
     private fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
