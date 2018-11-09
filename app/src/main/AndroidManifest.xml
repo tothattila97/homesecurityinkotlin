@@ -27,13 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activities.CameraActivity"
             android:screenOrientation="landscape" />
-
         <activity android:name=".ui.activities.SignUpActivity" />
-
+        <activity android:name=".ui.activities.TestActivity" />
     </application>
 
 </manifest>

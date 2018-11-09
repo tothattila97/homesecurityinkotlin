@@ -1,9 +1,9 @@
 package production.toth.attila.homesecurityinkotlin
 
-import android.app.Activity
+import android.support.v4.app.Fragment
 import java.util.concurrent.BlockingQueue
 
-class AudioConsumer(var audios: BlockingQueue<ByteArray>,activity: Activity): Runnable{
+class AudioConsumer(var audios: BlockingQueue<ByteArray>,fragment: Fragment): Runnable{
 
 
     override fun run() {

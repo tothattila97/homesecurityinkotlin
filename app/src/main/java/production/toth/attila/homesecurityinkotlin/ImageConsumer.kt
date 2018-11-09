@@ -1,8 +1,8 @@
 package production.toth.attila.homesecurityinkotlin
 
-import android.app.Activity
 import android.graphics.Bitmap
 import android.media.Image
+import android.support.v4.app.Fragment
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
@@ -11,7 +11,7 @@ import java.util.concurrent.BlockingQueue
 
 class ImageConsumer(
         private var q: BlockingQueue<Bitmap>,
-        activity: Activity
+        fragment: Fragment
 ): Runnable {
 
     val ImageConsumerTAG = "somethingHappened"
@@ -21,7 +21,7 @@ class ImageConsumer(
     private var secondbitmap: Bitmap? = null
     var starttime: Long = 0
     var difference: Long = 0
-    private var a: Activity = activity
+    private var a: Fragment = fragment
     private var queue: BlockingQueue<Bitmap> = q
 
     /*private object Holder { val INSTANCE = ImageConsumer() }
@@ -30,7 +30,7 @@ class ImageConsumer(
         val instance: ImageConsumer by lazy { Holder.INSTANCE }
     }*/
 
-    var callback: IRingtoneCallback = activity as IRingtoneCallback
+    var callback: IRingtoneCallback = fragment as IRingtoneCallback
 
     /*fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
         callback = activity as IRingtoneCallback
@@ -105,7 +105,7 @@ class ImageConsumer(
     }
 
     private fun persistImage(bitmap: Bitmap, name: String): File {
-        val filesDir = a.baseContext.filesDir
+        val filesDir = a.activity.baseContext.filesDir
         val imageFile = File(filesDir, "$name.jpg")
         val os: OutputStream
         try {

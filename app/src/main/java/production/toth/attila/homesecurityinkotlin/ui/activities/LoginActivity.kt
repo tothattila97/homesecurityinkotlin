@@ -39,7 +39,7 @@ class LoginActivity() : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             //login();
-            val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+            val cameraIntent = Intent(applicationContext, TestActivity::class.java)
             startActivity(cameraIntent)
         }
 

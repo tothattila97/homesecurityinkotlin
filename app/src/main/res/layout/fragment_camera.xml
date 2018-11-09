@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.CameraActivity"
-    android:orientation="vertical">
+    android:baselineAligned="false"
+    android:weightSum="10">
 
-    <include layout="@layout/toolbar" android:id="@+id/main_toolbar"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
+        android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="9" />
+
+    <Button
+        android:id="@+id/button_capture"
+        android:text="Supervision"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/white"/>
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/aluminum"
-        />
-
+        android:layout_gravity="center" />
 </LinearLayout>
