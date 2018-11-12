@@ -12,11 +12,14 @@
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"
+            app:civ_border_color="@color/aluminum"
+            android:paddingTop="@dimen/profile_data_padding"
+            android:paddingBottom="@dimen/profile_data_padding"
             android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher_round"
             />
 
         <TextView
@@ -25,7 +28,8 @@
             android:text="Name"
             android:textColor="@color/colorPrimary"
             android:drawableBottom="@drawable/section_header"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +38,8 @@
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingEnd="@dimen/profile_data_padding"
             android:paddingBottom="@dimen/profile_data_padding"
-            android:text="Teszt név"/>
+            android:text="Teszt név"
+            android:textColor="@color/black"/>
 
 
         <TextView
@@ -43,7 +48,8 @@
             android:text="E-mail"
             android:textColor="@color/colorPrimary"
             android:drawableBottom="@drawable/section_header"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +58,8 @@
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingEnd="@dimen/profile_data_padding"
             android:paddingBottom="@dimen/profile_data_padding"
-            android:text="Teszt email"/>
+            android:text="Teszt email"
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -60,7 +67,8 @@
             android:text="Phone number"
             android:textColor="@color/colorPrimary"
             android:drawableBottom="@drawable/section_header"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -69,7 +77,8 @@
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingEnd="@dimen/profile_data_padding"
             android:paddingBottom="@dimen/profile_data_padding"
-            android:text="Teszt telefonszám"/>
+            android:text="Teszt telefonszám"
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -77,7 +86,8 @@
             android:text="Date of birth"
             android:textColor="@color/colorPrimary"
             android:drawableBottom="@drawable/section_header"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +96,8 @@
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingEnd="@dimen/profile_data_padding"
             android:paddingBottom="@dimen/profile_data_padding"
-            android:text="Teszt születési dátum"/>
+            android:text="Teszt születési dátum"
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -94,7 +105,8 @@
             android:text="Gender"
             android:textColor="@color/colorPrimary"
             android:drawableBottom="@drawable/section_header"
-            style="?android:attr/listSeparatorTextViewStyle" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -103,7 +115,8 @@
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingEnd="@dimen/profile_data_padding"
             android:paddingBottom="@dimen/profile_data_padding"
-            android:text="Teszt nem"/>
+            android:text="Teszt nem"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 

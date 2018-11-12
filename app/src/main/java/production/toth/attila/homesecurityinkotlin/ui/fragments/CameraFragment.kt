@@ -1,7 +1,8 @@
 package production.toth.attila.homesecurityinkotlin.ui.fragments
 
-import android.Manifest
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.Camera
@@ -12,8 +13,8 @@ import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,8 +22,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
-import production.toth.attila.homesecurityinkotlin.*
-import production.toth.attila.homesecurityinkotlin.ui.activities.TestActivity
+import com.microtripit.mandrillapp.lutung.MandrillApi
+import com.microtripit.mandrillapp.lutung.view.MandrillMessage
+import production.toth.attila.homesecurityinkotlin.AudioConsumer
+import production.toth.attila.homesecurityinkotlin.CameraPreview
+import production.toth.attila.homesecurityinkotlin.ImageConsumer
+import production.toth.attila.homesecurityinkotlin.R
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +35,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
+
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
     private val TAG: String = "CameraActivityTag"
@@ -261,6 +267,46 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
             recorder = null;
             audioConsumerThread = null;
         }
+    }
+
+    override fun sendEmailNotification() {
+        /*val intent =  Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "frigh.adam@gmail.com"));
+        intent.type = "message/rfc822";
+        //intent.putExtra(Intent.EXTRA_EMAIL, "frigh.adam@gmail.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Spammer");
+        intent.putExtra(Intent.EXTRA_TEXT, "Szia! Működik a szakdogámban az email értesítés küldése :)");
+        startActivity(Intent.createChooser(intent, "Send Email"));*/
+        //TODO : Email értesítés megfixálása szükséges
+        val mandrillApi =  MandrillApi("26aee713ade1c0e7dc48b046fdb1a2df-us19");
+        val message =  MandrillMessage();
+        message.setSubject("SPAMMER!");
+        message.setHtml("<h1>Hi pal!</h1><br />Működik a szakdogámban az email értesítés küldése :)");
+        message.setAutoText(true);
+        message.setFromEmail("toth.attila9704@gmail.com");
+        message.setFromName("Attila Toth");
+
+        val recipients = ArrayList<MandrillMessage.Recipient>()
+        val recipient = MandrillMessage.Recipient()
+        recipient.setEmail("frigh.adam@gmail.com");
+        recipient.setName("Adam Frigh");
+        recipients.add(recipient)
+        message.setTo(recipients);
+        message.setPreserveRecipients(true);
+        val messageStatusReports = mandrillApi.messages().send(message,false)
+    }
+
+    override fun sendSmsNotification() {
+        val manager = SmsManager.getDefault();
+
+        val piSend = PendingIntent.getBroadcast(context, 0, Intent("SMS_SENT"), 0);
+        val piDelivered = PendingIntent.getBroadcast(context, 0,  Intent("SMS_DELIVERED"), 0);
+
+        val userLogin = context.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+        val editor  = userLogin.edit()
+        val phonenumber = userLogin.getString("userLogin", "")
+        val message: String = "Mukodik a szakdogam sms ertesites funkcioja :)"
+
+        manager.sendTextMessage(phonenumber, null, message, piSend, piDelivered)
     }
 
     internal class MyFaceDetectionListener : Camera.FaceDetectionListener {

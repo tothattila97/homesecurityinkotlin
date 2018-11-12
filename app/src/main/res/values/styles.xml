@@ -13,5 +13,8 @@
         <item name="android:textColorPrimary">@color/iron</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
-
+    
+    <!--<style name="CustomColorSwitchStyle" parent="AppTheme">
+        <item name="colorSwitchOn">@color/black</item>
+    </style> -->
 </resources>

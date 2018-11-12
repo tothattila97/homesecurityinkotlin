@@ -24,7 +24,8 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
 
-        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.SEND_SMS)
         managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
 
         viewPager = findViewById(R.id.viewpager)

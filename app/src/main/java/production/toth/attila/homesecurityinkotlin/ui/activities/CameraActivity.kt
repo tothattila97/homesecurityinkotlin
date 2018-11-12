@@ -34,6 +34,13 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class CameraActivity : AppCompatActivity(), ImageConsumer.IRingtoneCallback {
+    override fun sendSmsNotification() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun sendEmailNotification() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null

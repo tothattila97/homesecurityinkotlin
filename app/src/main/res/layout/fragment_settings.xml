@@ -1,12 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SETTING MEGHÍVÓDTAM"
-        android:textColor="@color/colorPrimary"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/email_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Email notification"
+            android:textSize="20sp"
+            android:textOn="On"
+            android:textOff="Off"
+            android:checked="false"/>
+        <!--android:theme="@style/CustomColorSwitchStyle"-->
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sms_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Sms notification"
+            android:textSize="20sp"
+            android:textOn="On"
+            android:textOff="Off"
+            android:checked="false" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/noise_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Noise detection"
+            android:textSize="20sp"
+            android:textOn="On"
+            android:textOff="Off"
+            android:checked="false" />
+
+        <TextView
+            android:id="@+id/languageSetting_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Language"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/notifies_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Notifies and sound"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/feedback_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Feedback"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/help_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:padding="20dp"
+            android:text="Help"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HomeSecurity v1.0.0"
+            android:textColor="@color/black"
+            android:layout_gravity="bottom|center"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</ScrollView>

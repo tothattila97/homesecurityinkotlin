@@ -51,6 +51,8 @@ class ImageConsumer(
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
                         //val networkService = RetrofitUploadImplementation()
                         //networkService.uploadImage(uploadFile)
+                        callback.sendEmailNotification()
+                        //callback.sendSmsNotification()
                     }
                     //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
                     //RetrofitUploadImplementation(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.
@@ -121,5 +123,7 @@ class ImageConsumer(
 
     interface IRingtoneCallback {
         fun playRingtone()
+        fun sendEmailNotification()
+        fun sendSmsNotification()
     }
 }
