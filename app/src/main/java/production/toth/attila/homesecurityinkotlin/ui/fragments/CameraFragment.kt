@@ -11,8 +11,6 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.media.RingtoneManager
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.telephony.SmsManager
 import android.util.Log
@@ -24,17 +22,14 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.microtripit.mandrillapp.lutung.MandrillApi
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage
-import production.toth.attila.homesecurityinkotlin.AudioConsumer
-import production.toth.attila.homesecurityinkotlin.CameraPreview
-import production.toth.attila.homesecurityinkotlin.ImageConsumer
-import production.toth.attila.homesecurityinkotlin.R
-import java.io.*
-import java.text.SimpleDateFormat
+import production.toth.attila.homesecurityinkotlin.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
+import kotlin.concurrent.thread
 
-class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
+class CameraFragment: Fragment(), IRingtoneCallback {
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
@@ -57,24 +52,6 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
     private var audioConsumerThread: Thread? = null
     var rootview: View? = null
-
-    private val mPicture = Camera.PictureCallback { data, _ ->
-        val pictureFile: File = getOutputMediaFile(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
-                ?: run {
-                    Log.d(TAG, ("Error creating media file, check storage permissions"))
-                    return@PictureCallback
-                }
-
-        try {
-            val fos = FileOutputStream(pictureFile)
-            fos.write(data)
-            fos.close()
-        } catch (e: FileNotFoundException) {
-            Log.d(TAG, "File not found: ${e.message}")
-        } catch (e: IOException) {
-            Log.d(TAG, "Error accessing file: ${e.message}")
-        }
-    }
 
     private val previewCallback = Camera.PreviewCallback { data, _ ->
         timeDifference = System.currentTimeMillis() - timeStart
@@ -132,7 +109,9 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
             CameraPreview(context, it, previewCallback)
         }
         //managePermissions.checkPermissions()
-
+        recorder = AudioRecord(MediaRecorder.AudioSource.MIC,
+                RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+                RECORDER_AUDIO_ENCODING, bufferElementsToRec * bytesPerElement)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -151,6 +130,7 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
             isSupervisionStarted = true
             val imageConsumerThread = Thread(imageConsumer)
             imageConsumerThread.start()
+            //startRecording()
         }
 
         return rootview
@@ -159,6 +139,7 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     override fun onPause() {
         super.onPause()
         releaseCamera()
+        stopRecording()
     }
 
     fun releaseCamera() {
@@ -183,58 +164,6 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
         }
     }
 
-    /** Create a File for saving an image or video */
-    private fun getOutputMediaFile(type: Int): File? {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        val mediaStorageDir = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "HomeSecurityKotlin"
-        )
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        mediaStorageDir.apply {
-            if (!exists()) {
-                if (!mkdirs()) {
-                    Log.d("MyCameraApp", "failed to create directory")
-                    return null
-                }
-            }
-        }
-
-        // Create a media file name
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        return when (type) {
-            MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE -> {
-                File("${mediaStorageDir.path}${File.separator}IMG_$timeStamp.jpg")
-            }
-            MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO -> {
-                File("${mediaStorageDir.path}${File.separator}VID_$timeStamp.mp4")
-            }
-            else -> null
-        }
-    }
-
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            PermissionsRequestCode ->{
-                val isPermissionsGranted = managePermissions
-                        .processPermissionsResult(requestCode,permissions,grantResults)
-
-                if(isPermissionsGranted){
-                    // Do the task now
-                    context.toast("Permissions granted.")
-                }else{
-                    context.toast("Permissions denied.")
-                }
-                return
-            }
-        }
-    }*/
-
     private fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -251,13 +180,16 @@ class CameraFragment: Fragment(), ImageConsumer.IRingtoneCallback{
     }
 
     private fun startRecording(){
-        recorder = AudioRecord(MediaRecorder.AudioSource.MIC,
-                RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-                RECORDER_AUDIO_ENCODING, bufferElementsToRec * bytesPerElement)
-
         recorder?.startRecording()
+        thread { writeBytesToQueue() }
         audioConsumerThread = Thread(audioConsumer)
         audioConsumerThread?.start()
+    }
+
+    private fun writeBytesToQueue(){
+        val sData = ByteArray(bufferElementsToRec)
+        recorder?.read(sData,0, bufferElementsToRec)
+        audiosInByteArray.put(sData)
     }
 
     private fun stopRecording(){

@@ -51,7 +51,7 @@ class ImageConsumer(
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
                         //val networkService = RetrofitUploadImplementation()
                         //networkService.uploadImage(uploadFile)
-                        callback.sendEmailNotification()
+                        //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }
                     //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
@@ -119,11 +119,5 @@ class ImageConsumer(
             Log.e(javaClass.simpleName, "Error writing bitmap", e)
         }
         return imageFile
-    }
-
-    interface IRingtoneCallback {
-        fun playRingtone()
-        fun sendEmailNotification()
-        fun sendSmsNotification()
     }
 }
