@@ -3,10 +3,7 @@ package production.toth.attila.homesecurityinkotlin.network
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import production.toth.attila.homesecurityinkotlin.models.ChangePasswordModel
-import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
-import production.toth.attila.homesecurityinkotlin.models.UserProfileModel
-import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
+import production.toth.attila.homesecurityinkotlin.models.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -26,6 +23,9 @@ interface RetrofitUploadService {
 
     @GET("api/account/profile")
     abstract fun profile(): Call<UserProfileModel>
+
+    @PUT("api/account/profile")
+    abstract fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
 
     @GET("api/account/changepassword")
     abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
