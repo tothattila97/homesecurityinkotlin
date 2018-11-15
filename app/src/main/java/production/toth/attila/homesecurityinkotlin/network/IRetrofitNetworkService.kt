@@ -5,18 +5,19 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import production.toth.attila.homesecurityinkotlin.models.*
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
-interface RetrofitUploadService {
+interface IRetrofitNetworkService {
     @Multipart
     @POST("api/upload/")
     abstract fun postImage(@Part image: MultipartBody.Part, @Part("name") name: RequestBody): Call<ResponseBody>
 
     @POST("api/account/login")
-    abstract fun login(@Body loginModel: UserLoginModel): Call<ResponseBody>
+    abstract fun login(@Body loginModel: UserLoginModel): Call<okhttp3.Response>
 
     @POST("api/account/signup")
-    abstract fun signUp(@Body signUpModel: UserSignUpModel): Call<ResponseBody>
+    abstract fun signUp(@Body signUpModel: UserSignUpModel): Call<okhttp3.Response>
 
     @POST("api/account/logout")
     abstract fun logOut() : Call<ResponseBody>

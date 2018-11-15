@@ -49,13 +49,13 @@ class ImageConsumer(
                 if (percent > 3) {
                     //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
-                        //val networkService = RetrofitUploadImplementation()
+                        //val networkService = RetrofitNetworkService()
                         //networkService.uploadImage(uploadFile)
                         //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }
                     //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
-                    //RetrofitUploadImplementation(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.
+                    //RetrofitNetworkService(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.
                 }
                 Log.i("homesecurity", "Ekkora volt a két bitmap közötti eltérés %-ban: $percent")
                 difference = System.currentTimeMillis() - starttime

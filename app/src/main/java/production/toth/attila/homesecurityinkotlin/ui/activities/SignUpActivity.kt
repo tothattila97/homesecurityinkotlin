@@ -12,7 +12,7 @@ import android.widget.*
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.models.Gender
 import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
-import production.toth.attila.homesecurityinkotlin.network.RetrofitUploadImplementation
+import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import java.text.DateFormat
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -111,7 +111,7 @@ class SignUpActivity() : AppCompatActivity() {
         }
 
         // TODO: Implement your own signup logic here.
-        val signupService = RetrofitUploadImplementation()
+        val signupService = RetrofitNetworkService()
         val signupModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
         signupService.signup(signupModel)
 

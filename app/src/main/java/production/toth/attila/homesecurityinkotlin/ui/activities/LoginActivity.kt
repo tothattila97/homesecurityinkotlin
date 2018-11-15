@@ -14,7 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
-import production.toth.attila.homesecurityinkotlin.network.RetrofitUploadImplementation
+import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 
 class LoginActivity() : AppCompatActivity() {
 
@@ -71,7 +71,7 @@ class LoginActivity() : AppCompatActivity() {
         val password = passwordText.text.toString()
 
         // TODO: Implement your own authentication logic here.
-        val loginService = RetrofitUploadImplementation()
+        val loginService = RetrofitNetworkService()
         val loginModel = UserLoginModel(email,password)
         loginService.login(loginModel)
 

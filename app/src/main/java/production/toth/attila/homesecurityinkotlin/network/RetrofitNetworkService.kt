@@ -1,5 +1,6 @@
 package production.toth.attila.homesecurityinkotlin.network
 
+import android.content.Context
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import production.toth.attila.homesecurityinkotlin.models.ChangePasswordModel
@@ -12,20 +13,44 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
-class RetrofitUploadImplementation() {
+class RetrofitNetworkService() {
 
-    var service: RetrofitUploadService
+    var service: IRetrofitNetworkService
+    var cookie: String? = null
 
     init {
+        val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
+        // Saját cookie interceptor használata
+        val addCookiesInterceptor = createAddCookiesInterceptor()
+        val receivedCookiesInterceptor = createReceivedCookiesInterceptor()
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(addCookiesInterceptor).addInterceptor(receivedCookiesInterceptor).build()
         service = Retrofit.Builder()
-                    .baseUrl("https://imagestorageinblobdemo20180417110725.azurewebsites.net/")
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build()
-                    .create(RetrofitUploadService::class.java)
+                    .create(IRetrofitNetworkService::class.java)
+    }
+
+    fun createAddCookiesInterceptor(): Interceptor {
+        return Interceptor {
+            val requestBuilder = it.request().newBuilder()
+            if (cookie != null) {
+                requestBuilder.addHeader("Cookie", cookie)
+            }
+            it.proceed(requestBuilder.build())
+        }
+    }
+
+    fun createReceivedCookiesInterceptor(): Interceptor {
+        return Interceptor {
+            val originalRequest = it.proceed(it.request())
+            cookie = originalRequest.header("Set-Cookie")
+            originalRequest
+        }
     }
 
     fun uploadImage(file: File){
@@ -43,9 +68,9 @@ class RetrofitUploadImplementation() {
     fun login(loginModel: UserLoginModel){
 
         val req = service.login(loginModel)
-        req.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
+        req.enqueue(object : Callback<okhttp3.Response> {
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {}
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) { t.printStackTrace() }
         })
     }
 
@@ -61,9 +86,9 @@ class RetrofitUploadImplementation() {
     fun signup(signUpModel: UserSignUpModel){
 
         val req = service.signUp(signUpModel)
-        req.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
+        req.enqueue(object : Callback<okhttp3.Response> {
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {}
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) { t.printStackTrace() }
         })
     }
 
