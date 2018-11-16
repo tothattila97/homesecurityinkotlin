@@ -37,6 +37,17 @@ class LoginActivity() : AppCompatActivity() {
         loginButton = findViewById(R.id.btn_login)
         signUpLink = findViewById(R.id.link_signup)
 
+        val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+        val userName = userLogin.getString("userName","")
+        val password = userLogin.getString("password","")
+        if (userName != "" && password != ""){
+            var result = RetrofitNetworkService().login(UserLoginModel(userName,password))
+            if (result){
+                var automaticLogInIntent = Intent(this, TestActivity::class.java)
+                startActivity(automaticLogInIntent)
+            }
+        }
+
         loginButton.setOnClickListener {
             login()
             //val cameraIntent = Intent(applicationContext, TestActivity::class.java)

@@ -1,6 +1,5 @@
 package production.toth.attila.homesecurityinkotlin.network
 
-import com.google.gson.JsonObject
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONException
@@ -12,7 +11,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.time.ZonedDateTime
+import java.util.*
 
 class RetrofitNetworkService() {
 
@@ -72,14 +71,14 @@ class RetrofitNetworkService() {
 
         val req = service.login(loginModel)
         var succeeded = false
-        req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+        req.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     succeeded = true
                 }
             }
 
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
             }
         })
@@ -107,14 +106,14 @@ class RetrofitNetworkService() {
 
         val req = service.signUp(signUpModel)
         var succeeded = false
-        req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+        req.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     succeeded = true
                 }
             }
 
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
             }
         })
@@ -138,7 +137,7 @@ class RetrofitNetworkService() {
                         val surName = json.getString("surName")
                         val lastName = json.getString("lastName")
                         val phoneNumber = json.getString("phoneNumber")
-                        val dateOfBirth = json.get("dateOfBirth") as ZonedDateTime
+                        val dateOfBirth = json.get("dateOfBirth") as Date
                         val gender = json.get("gender") as Gender
                         profileModel = UserProfileModel(email, surName, lastName, phoneNumber, dateOfBirth, gender)
                     } catch (ex: JSONException) {
@@ -154,14 +153,14 @@ class RetrofitNetworkService() {
 
         val req = service.changePassword(changePasswordModel)
         var succeeded = false
-        req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+        req.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     succeeded = true
                 }
             }
 
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
             }
         })
@@ -172,14 +171,14 @@ class RetrofitNetworkService() {
 
         val req = service.deleteAccount()
         var succeeded = false
-        req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+        req.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful){
                     succeeded = true
                 }
             }
 
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
             }
         })

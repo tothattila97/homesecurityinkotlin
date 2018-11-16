@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.models.Gender
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 
 class ProfileFragment: Fragment() {
@@ -27,7 +28,6 @@ class ProfileFragment: Fragment() {
         val rootView= inflater?.inflate(R.layout.fragment_profile, container, false)
 
         genderPics = rootView!!.findViewById(R.id.profile_image)
-        Glide.with(this).load("https://us.123rf.com/450wm/triken/triken1608/triken160800029/61320775-male-avatar-profile-picture-default-user-avatar-guest-avatar-simply-human-head-vector-illustration-i.jpg?ver=6").into(genderPics)
 
         profileName = rootView.findViewById(R.id.profile_name)
         profileEmail = rootView.findViewById(R.id.profile_email)
@@ -41,6 +41,13 @@ class ProfileFragment: Fragment() {
         profilePhoneNumber.text = userProfileModel?.phoneNumber
         profileBirthDate.text = userProfileModel?.dateOfBirth.toString()
         profileGender.text = userProfileModel?.gender?.name
+
+        if(userProfileModel?.gender == Gender.Man)
+            Glide.with(this).load("https://us.123rf.com/450wm/triken/triken1608/triken160800029/61320775-male-avatar-profile-picture-default-user-avatar-guest-avatar-simply-human-head-vector-illustration-i.jpg?ver=6").into(genderPics)
+        else if (userProfileModel?.gender == Gender.Woman)
+            Glide.with(this).load("https://www.healthline.com/hlcmsresource/images/medical-reviewer/placeholder-woman.png").into(genderPics)
+        //else
+            //genderPics.contentDescription = userProfileModel!!.surname[0] as CharSequence
 
         return rootView
     }

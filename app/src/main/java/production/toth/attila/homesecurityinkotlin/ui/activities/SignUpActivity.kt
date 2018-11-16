@@ -14,8 +14,7 @@ import production.toth.attila.homesecurityinkotlin.models.Gender
 import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import java.text.DateFormat
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -102,7 +101,7 @@ class SignUpActivity() : AppCompatActivity() {
         val password = passwordText.text.toString()
         val confirmPassword = confirmPasswordText.text.toString()
         val phoneNumber = phoneNumber.text.toString()
-        val dateOfBirth = convertStringToZonedDateTime(dateOfBirth.text.toString())
+        val dateOfBirth = convertStringToDate(dateOfBirth.text.toString())
         var gender: Gender = Gender.Default
         when(genderRadioGroup.checkedRadioButtonId){
             R.id.gender_man -> gender = Gender.Man
@@ -179,13 +178,12 @@ class SignUpActivity() : AppCompatActivity() {
     }
 
     private fun convertDateToString(date: Date): String{
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ENGLISH)
+        val dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH)
         return dateFormat.format(date)
     }
 
-    private fun convertStringToZonedDateTime(timeInString : String): ZonedDateTime{
-        val pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS"
-        val Parser = DateTimeFormatter.ofPattern(pattern)
-        return ZonedDateTime.parse(timeInString, Parser)
+    private fun convertStringToDate(timeInString : String): Date{
+        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        return SimpleDateFormat(pattern, Locale.ENGLISH).parse(timeInString)
     }
 }

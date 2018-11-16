@@ -3,9 +3,11 @@ package production.toth.attila.homesecurityinkotlin.network
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import production.toth.attila.homesecurityinkotlin.models.*
+import production.toth.attila.homesecurityinkotlin.models.ChangePasswordModel
+import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
+import production.toth.attila.homesecurityinkotlin.models.UserProfileUpdateModel
+import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 interface IRetrofitNetworkService {
@@ -14,10 +16,10 @@ interface IRetrofitNetworkService {
     abstract fun postImage(@Part image: MultipartBody.Part, @Part("name") name: RequestBody): Call<ResponseBody>
 
     @POST("api/account/login")
-    abstract fun login(@Body loginModel: UserLoginModel): Call<okhttp3.Response>
+    abstract fun login(@Body loginModel: UserLoginModel): Call<ResponseBody>
 
     @POST("api/account/signup")
-    abstract fun signUp(@Body signUpModel: UserSignUpModel): Call<okhttp3.Response>
+    abstract fun signUp(@Body signUpModel: UserSignUpModel): Call<ResponseBody>
 
     @POST("api/account/logout")
     abstract fun logOut() : Call<ResponseBody>
@@ -29,8 +31,8 @@ interface IRetrofitNetworkService {
     abstract fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
 
     @GET("api/account/changepassword")
-    abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<okhttp3.Response>
+    abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
 
     @DELETE ("api/account/deleteaccount")
-    abstract fun deleteAccount(): Call<okhttp3.Response>
+    abstract fun deleteAccount(): Call<ResponseBody>
 }

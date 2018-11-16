@@ -1,5 +1,7 @@
 package production.toth.attila.homesecurityinkotlin.ui.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SwitchCompat
@@ -9,13 +11,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
+import production.toth.attila.homesecurityinkotlin.ui.activities.LoginActivity
 
 class SettingsFragment: Fragment(){
 
     lateinit var rootView:View
     lateinit var emailSwitch: SwitchCompat
-    lateinit var smsSwitchCompat: SwitchCompat
-    lateinit var noiseSwitchCompat: SwitchCompat
+    lateinit var smsSwitch: SwitchCompat
+    lateinit var noiseSwitch: SwitchCompat
     lateinit var helpTextView: TextView
     lateinit var feedbackTextView: TextView
     lateinit var languageTextView: TextView
@@ -29,8 +32,26 @@ class SettingsFragment: Fragment(){
         rootView = inflater!!.inflate(R.layout.fragment_settings, container, false);
 
         emailSwitch = rootView.findViewById(R.id.email_switch)
-        smsSwitchCompat = rootView.findViewById(R.id.sms_switch)
-        noiseSwitchCompat = rootView.findViewById(R.id.noise_switch)
+        emailSwitch.setOnClickListener {
+            var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
+            var editor  = switchesValues.edit()
+            editor.putString("emailSwitch", emailSwitch.isChecked.toString())
+            editor.apply()
+        }
+        smsSwitch = rootView.findViewById(R.id.sms_switch)
+        smsSwitch.setOnClickListener {
+            var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
+            var editor  = switchesValues.edit()
+            editor.putString("smsSwitch", smsSwitch.isChecked.toString())
+            editor.apply()
+        }
+        noiseSwitch = rootView.findViewById(R.id.noise_switch)
+        noiseSwitch.setOnClickListener {
+            var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
+            var editor  = switchesValues.edit()
+            editor.putString("noiseSwitch", noiseSwitch.isChecked.toString())
+            editor.apply()
+        }
         languageTextView = rootView.findViewById(R.id.languageSetting_textView)
         feedbackTextView = rootView.findViewById(R.id.feedback_textView)
         helpTextView = rootView.findViewById(R.id.help_textView)
@@ -38,6 +59,14 @@ class SettingsFragment: Fragment(){
 
         logOutTextView.setOnClickListener {
             var result = RetrofitNetworkService().logout()
+            if(result){
+                val userLogin =  activity.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+                val editor  = userLogin.edit()
+                editor.clear()
+                editor.apply()
+                val logOutIntent = Intent(activity, LoginActivity::class.java)
+                startActivity(logOutIntent)
+            }
         }
 
         return rootView

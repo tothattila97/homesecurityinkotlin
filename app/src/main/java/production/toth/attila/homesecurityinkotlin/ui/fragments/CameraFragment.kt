@@ -142,7 +142,7 @@ class CameraFragment: Fragment(), IRingtoneCallback {
         stopRecording()
     }
 
-    fun releaseCamera() {
+    public fun releaseCamera() {
         if(mCamera != null){
             mCamera?.release()
             mCamera = null

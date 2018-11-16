@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.ManagePermissions
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.ui.fragments.CameraFragment
 import production.toth.attila.homesecurityinkotlin.ui.fragments.NavigationPagerAdapter
 
 class TestActivity : AppCompatActivity() {
@@ -87,4 +88,9 @@ class TestActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        CameraFragment().releaseCamera()
+        this.finishAffinity()
+    }
 }

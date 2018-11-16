@@ -1,11 +1,11 @@
 package production.toth.attila.homesecurityinkotlin.models
 
-import java.time.ZonedDateTime
+import java.util.*
 
 data class UserSignUpModel(val email: String,
                            val userName: String,
                            val password: String,
                            val confirmPassword: String,
                            val notifiablePhoneNumber: String,
-                           val dateOfBirth: ZonedDateTime,
+                           val dateOfBirth: Date,
                            val gender: Gender)
