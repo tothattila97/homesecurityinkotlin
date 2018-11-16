@@ -1,17 +1,18 @@
 package production.toth.attila.homesecurityinkotlin.network
 
-import android.content.Context
+import com.google.gson.JsonObject
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import production.toth.attila.homesecurityinkotlin.models.ChangePasswordModel
-import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
-import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
+import org.json.JSONException
+import org.json.JSONObject
+import production.toth.attila.homesecurityinkotlin.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.time.ZonedDateTime
 
 class RetrofitNetworkService() {
 
@@ -28,11 +29,11 @@ class RetrofitNetworkService() {
         val receivedCookiesInterceptor = createReceivedCookiesInterceptor()
         val client = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(addCookiesInterceptor).addInterceptor(receivedCookiesInterceptor).build()
         service = Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build()
-                    .create(IRetrofitNetworkService::class.java)
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+                .create(IRetrofitNetworkService::class.java)
     }
 
     fun createAddCookiesInterceptor(): Interceptor {
@@ -53,7 +54,7 @@ class RetrofitNetworkService() {
         }
     }
 
-    fun uploadImage(file: File){
+    fun uploadImage(file: File) {
         val reqFile = RequestBody.create(MediaType.parse("image/jpg"), file)    //      image/* helyett jpg odaírva
         val body = MultipartBody.Part.createFormData("upload", file.name, reqFile)
         val name = RequestBody.create(MediaType.parse("text/plain"), "upload_test")
@@ -61,51 +62,127 @@ class RetrofitNetworkService() {
         val req = service.postImage(body, name)
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+            }
         })
     }
 
-    fun login(loginModel: UserLoginModel){
+    fun login(loginModel: UserLoginModel): Boolean {
 
         val req = service.login(loginModel)
+        var succeeded = false
         req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {}
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) { t.printStackTrace() }
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+                if (response.isSuccessful) {
+                    succeeded = true
+                }
+            }
+
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+                t.printStackTrace()
+            }
         })
+        return succeeded
     }
 
-    fun logout(){
+    fun logout(): Boolean {
 
         val req = service.logOut()
+        var succeeded = false
         req.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful)
+                    succeeded = true
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+            }
         })
+        return succeeded
     }
 
-    fun signup(signUpModel: UserSignUpModel){
+    fun signup(signUpModel: UserSignUpModel): Boolean {
 
         val req = service.signUp(signUpModel)
+        var succeeded = false
         req.enqueue(object : Callback<okhttp3.Response> {
-            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {}
-            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) { t.printStackTrace() }
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+                if (response.isSuccessful) {
+                    succeeded = true
+                }
+            }
+
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+                t.printStackTrace()
+            }
         })
+        return succeeded
     }
 
-    fun profile(){
+    fun profile(): UserProfileModel? {
 
+        var req = service.profile()
+        var profileModel: UserProfileModel? = null
+        req.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    try {
+                        val json = JSONObject(response.body()?.string())
+                        val email = json.getString("email")
+                        val surName = json.getString("surName")
+                        val lastName = json.getString("lastName")
+                        val phoneNumber = json.getString("phoneNumber")
+                        val dateOfBirth = json.get("dateOfBirth") as ZonedDateTime
+                        val gender = json.get("gender") as Gender
+                        profileModel = UserProfileModel(email, surName, lastName, phoneNumber, dateOfBirth, gender)
+                    } catch (ex: JSONException) {
+                        ex.printStackTrace()
+                    }
+                }
+            }
+        })
+        return profileModel
     }
 
-    fun changePassword(changePasswordModel: ChangePasswordModel){
+    fun changePassword(changePasswordModel: ChangePasswordModel): Boolean {
 
         val req = service.changePassword(changePasswordModel)
-        req.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
+        var succeeded = false
+        req.enqueue(object : Callback<okhttp3.Response> {
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+                if (response.isSuccessful) {
+                    succeeded = true
+                }
+            }
+
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+                t.printStackTrace()
+            }
         })
+        return succeeded
     }
 
-    fun deleteAccount(){
+    fun deleteAccount(): Boolean {
 
+        val req = service.deleteAccount()
+        var succeeded = false
+        req.enqueue(object : Callback<okhttp3.Response> {
+            override fun onResponse(call: Call<okhttp3.Response>, response: Response<okhttp3.Response>) {
+                if(response.isSuccessful){
+                    succeeded = true
+                }
+            }
+
+            override fun onFailure(call: Call<okhttp3.Response>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+        return succeeded
     }
 }

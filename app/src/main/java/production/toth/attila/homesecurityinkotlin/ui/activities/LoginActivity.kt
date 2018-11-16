@@ -38,9 +38,9 @@ class LoginActivity() : AppCompatActivity() {
         signUpLink = findViewById(R.id.link_signup)
 
         loginButton.setOnClickListener {
-            //login();
-            val cameraIntent = Intent(applicationContext, TestActivity::class.java)
-            startActivity(cameraIntent)
+            login()
+            //val cameraIntent = Intent(applicationContext, TestActivity::class.java)
+            //startActivity(cameraIntent)
         }
 
         signUpLink.setOnClickListener {
@@ -73,7 +73,7 @@ class LoginActivity() : AppCompatActivity() {
         // TODO: Implement your own authentication logic here.
         val loginService = RetrofitNetworkService()
         val loginModel = UserLoginModel(email,password)
-        loginService.login(loginModel)
+        val result = loginService.login(loginModel)
 
         Handler().postDelayed(
                 {
@@ -95,7 +95,7 @@ class LoginActivity() : AppCompatActivity() {
                 editor.putString("userName", emailText.text.toString())
                 editor.putString("password", passwordText.text.toString())
                 editor.apply()  // editor.commit()
-                val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+                val cameraIntent = Intent(applicationContext, TestActivity::class.java)
                 startActivity(cameraIntent)
                 //this.finish()
             }
@@ -116,7 +116,7 @@ class LoginActivity() : AppCompatActivity() {
         editor.putString("userName", emailText.text.toString())
         editor.putString("password", passwordText.text.toString())
         editor.apply()  // editor.commit()
-        val cameraIntent = Intent(applicationContext, CameraActivity::class.java)
+        val cameraIntent = Intent(applicationContext, TestActivity::class.java)
         startActivity(cameraIntent)
         finish()
     }

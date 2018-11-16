@@ -31,6 +31,7 @@ class TestActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.viewpager)
         bottomNavigationView = findViewById(R.id.bottom_navigation_view)
         viewPager.adapter = NavigationPagerAdapter(supportFragmentManager)
+        viewPager.offscreenPageLimit = 4
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){

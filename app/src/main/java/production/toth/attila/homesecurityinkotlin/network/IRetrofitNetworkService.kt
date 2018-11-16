@@ -23,14 +23,14 @@ interface IRetrofitNetworkService {
     abstract fun logOut() : Call<ResponseBody>
 
     @GET("api/account/profile")
-    abstract fun profile(): Call<UserProfileModel>
+    abstract fun profile(): Call<ResponseBody>
 
     @PUT("api/account/profile")
     abstract fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
 
     @GET("api/account/changepassword")
-    abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
+    abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<okhttp3.Response>
 
     @DELETE ("api/account/deleteaccount")
-    abstract fun deleteAccount(): Call<ResponseBody>
+    abstract fun deleteAccount(): Call<okhttp3.Response>
 }

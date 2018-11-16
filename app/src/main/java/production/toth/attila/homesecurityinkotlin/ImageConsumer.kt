@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.media.Image
 import android.support.v4.app.Fragment
 import android.util.Log
+import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -49,8 +50,7 @@ class ImageConsumer(
                 if (percent > 3) {
                     //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
-                        //val networkService = RetrofitNetworkService()
-                        //networkService.uploadImage(uploadFile)
+                        RetrofitNetworkService().uploadImage(uploadFile)
                         //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }

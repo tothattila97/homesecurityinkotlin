@@ -32,6 +32,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/profile_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/profile_data_padding"
@@ -52,6 +53,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/profile_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/profile_data_padding"
@@ -71,6 +73,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/profile_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/profile_data_padding"
@@ -90,6 +93,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/profile_birth_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/profile_data_padding"
@@ -109,6 +113,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:id="@+id/profile_gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/profile_data_padding"

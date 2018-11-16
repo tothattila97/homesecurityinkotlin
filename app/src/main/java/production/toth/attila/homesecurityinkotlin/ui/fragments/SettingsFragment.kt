@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 
 class SettingsFragment: Fragment(){
 
@@ -18,6 +19,7 @@ class SettingsFragment: Fragment(){
     lateinit var helpTextView: TextView
     lateinit var feedbackTextView: TextView
     lateinit var languageTextView: TextView
+    lateinit var logOutTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,11 @@ class SettingsFragment: Fragment(){
         languageTextView = rootView.findViewById(R.id.languageSetting_textView)
         feedbackTextView = rootView.findViewById(R.id.feedback_textView)
         helpTextView = rootView.findViewById(R.id.help_textView)
+        logOutTextView = rootView.findViewById(R.id.log_out_textView)
+
+        logOutTextView.setOnClickListener {
+            var result = RetrofitNetworkService().logout()
+        }
 
         return rootView
     }

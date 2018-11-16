@@ -113,7 +113,7 @@ class SignUpActivity() : AppCompatActivity() {
         // TODO: Implement your own signup logic here.
         val signupService = RetrofitNetworkService()
         val signupModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
-        signupService.signup(signupModel)
+        val result = signupService.signup(signupModel)
 
         Handler().postDelayed(
                 {
