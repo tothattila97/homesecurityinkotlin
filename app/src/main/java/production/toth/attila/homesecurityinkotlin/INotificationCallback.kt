@@ -1,7 +1,7 @@
 package production.toth.attila.homesecurityinkotlin
 
-interface IRingtoneCallback {
+interface INotificationCallback {
     fun playRingtone()
-    fun sendEmailNotification()
+    //fun sendEmailNotification()
     fun sendSmsNotification()
 }

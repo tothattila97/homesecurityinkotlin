@@ -33,12 +33,8 @@ import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class CameraActivity : AppCompatActivity(), IRingtoneCallback {
+class CameraActivity : AppCompatActivity(), INotificationCallback {
     override fun sendSmsNotification() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun sendEmailNotification() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

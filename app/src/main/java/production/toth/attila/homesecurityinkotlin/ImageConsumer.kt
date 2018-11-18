@@ -31,10 +31,10 @@ class ImageConsumer(
         val instance: ImageConsumer by lazy { Holder.INSTANCE }
     }*/
 
-    var callback: IRingtoneCallback = fragment as IRingtoneCallback
+    var callback: INotificationCallback = fragment as INotificationCallback
 
     /*fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
-        callback = activity as IRingtoneCallback
+        callback = activity as INotificationCallback
         this.a = activity
         this.queue = q
         //this.previewQueue = q

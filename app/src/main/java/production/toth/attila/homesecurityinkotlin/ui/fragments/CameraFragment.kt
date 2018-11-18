@@ -20,16 +20,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.microtripit.mandrillapp.lutung.MandrillApi
-import com.microtripit.mandrillapp.lutung.view.MandrillMessage
 import production.toth.attila.homesecurityinkotlin.*
 import java.io.ByteArrayOutputStream
-import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.thread
 
-class CameraFragment: Fragment(), IRingtoneCallback {
+class CameraFragment: Fragment(), INotificationCallback {
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
@@ -201,32 +198,6 @@ class CameraFragment: Fragment(), IRingtoneCallback {
         }
     }
 
-    override fun sendEmailNotification() {
-        /*val intent =  Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "frigh.adam@gmail.com"));
-        intent.type = "message/rfc822";
-        //intent.putExtra(Intent.EXTRA_EMAIL, "frigh.adam@gmail.com");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Spammer");
-        intent.putExtra(Intent.EXTRA_TEXT, "Szia! Működik a szakdogámban az email értesítés küldése :)");
-        startActivity(Intent.createChooser(intent, "Send Email"));*/
-        //TODO : Email értesítés megfixálása szükséges
-        val mandrillApi =  MandrillApi("26aee713ade1c0e7dc48b046fdb1a2df-us19");
-        val message =  MandrillMessage();
-        message.setSubject("SPAMMER!");
-        message.setHtml("<h1>Hi pal!</h1><br />Működik a szakdogámban az email értesítés küldése :)");
-        message.setAutoText(true);
-        message.setFromEmail("toth.attila9704@gmail.com");
-        message.setFromName("Attila Toth");
-
-        val recipients = ArrayList<MandrillMessage.Recipient>()
-        val recipient = MandrillMessage.Recipient()
-        recipient.setEmail("frigh.adam@gmail.com");
-        recipient.setName("Adam Frigh");
-        recipients.add(recipient)
-        message.setTo(recipients);
-        message.setPreserveRecipients(true);
-        val messageStatusReports = mandrillApi.messages().send(message,false)
-    }
-
     override fun sendSmsNotification() {
         val manager = SmsManager.getDefault();
 
@@ -234,7 +205,6 @@ class CameraFragment: Fragment(), IRingtoneCallback {
         val piDelivered = PendingIntent.getBroadcast(context, 0,  Intent("SMS_DELIVERED"), 0);
 
         val userLogin = context.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
-        val editor  = userLogin.edit()
         val phonenumber = userLogin.getString("userLogin", "")
         val message: String = "Mukodik a szakdogam sms ertesites funkcioja :)"
 
