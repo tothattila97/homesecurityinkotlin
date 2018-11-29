@@ -14,7 +14,6 @@ import production.toth.attila.homesecurityinkotlin.models.Gender
 import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -37,6 +36,7 @@ class SignUpActivity() : AppCompatActivity() {
     lateinit var signUpButton: Button
     lateinit var loginLink: TextView
     var birthCalendar = Calendar.getInstance()
+    var dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +64,10 @@ class SignUpActivity() : AppCompatActivity() {
         }
 
         dateOfBirth.setOnClickListener {
-            DatePickerDialog(this, date, birthCalendar.get(Calendar.YEAR), birthCalendar.get(Calendar.MONTH),
-                    birthCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            val dialog = DatePickerDialog(this, date, birthCalendar.get(Calendar.YEAR), birthCalendar.get(Calendar.MONTH),
+                    birthCalendar.get(Calendar.DAY_OF_MONTH))
+            dialog.datePicker.maxDate = System.currentTimeMillis()
+            dialog.show()
         }
 
         signUpButton.setOnClickListener {
@@ -110,9 +112,9 @@ class SignUpActivity() : AppCompatActivity() {
         }
 
         // TODO: Implement your own signup logic here.
-        val signupService = RetrofitNetworkService()
-        val signupModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
-        val result = signupService.signup(signupModel)
+        val signUpService = RetrofitNetworkService()
+        val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
+        val result = signUpService.signup(signUpModel)
 
         Handler().postDelayed(
                 {
@@ -178,12 +180,10 @@ class SignUpActivity() : AppCompatActivity() {
     }
 
     private fun convertDateToString(date: Date): String{
-        val dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH)
         return dateFormat.format(date)
     }
 
     private fun convertStringToDate(timeInString : String): Date{
-        val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
-        return SimpleDateFormat(pattern, Locale.ENGLISH).parse(timeInString)
+        return dateFormat.parse(timeInString)
     }
 }

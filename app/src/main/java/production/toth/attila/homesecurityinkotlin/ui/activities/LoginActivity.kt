@@ -86,13 +86,15 @@ class LoginActivity() : AppCompatActivity() {
         val loginModel = UserLoginModel(email,password)
         val result = loginService.login(loginModel)
 
-        Handler().postDelayed(
-                {
-                    // On complete call either onLoginSuccess or onLoginFailed
-                    onLoginSuccess()
-                    // onLoginFailed();
-                    progressDialog.dismiss()
-                }, 3000)
+        if(result){
+            Handler().postDelayed(
+                    {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess()
+                        // onLoginFailed();
+                        progressDialog.dismiss()
+                    }, 3000)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

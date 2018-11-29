@@ -66,8 +66,6 @@ class CameraFragment: Fragment(), INotificationCallback {
                 yuvImage.compressToJpeg(Rect(0, 0, width, height), 50, out)
                 val ujpreviewPicture = out.toByteArray()
                 val bitmap = BitmapFactory.decodeByteArray(ujpreviewPicture, 0, ujpreviewPicture.size)
-
-                //val bitmap: Bitmap = BitmapFactory.decodeByteArray(previewPicture , 0, previewPicture.size, null)
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             } catch (e: InterruptedException) {
