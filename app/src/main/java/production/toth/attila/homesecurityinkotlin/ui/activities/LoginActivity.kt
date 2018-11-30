@@ -8,19 +8,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
+import java.lang.Exception
 
 class LoginActivity() : AppCompatActivity() {
 
     companion object {
         val TAG = "LoginActivity"
-        val REQUEST_SIGNUP = 0
+        val REQUEST_SIGNUP = 1
     }
 
     lateinit var emailText: EditText
@@ -57,7 +55,7 @@ class LoginActivity() : AppCompatActivity() {
         signUpLink.setOnClickListener {
             val signUpIntent = Intent(applicationContext, SignUpActivity::class.java)
             startActivityForResult(signUpIntent, REQUEST_SIGNUP)
-            finish()
+            //finish()
             overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         }
     }
@@ -93,25 +91,32 @@ class LoginActivity() : AppCompatActivity() {
                         onLoginSuccess()
                         // onLoginFailed();
                         progressDialog.dismiss()
-                    }, 3000)
+                    }, 2000)
         }
+        else
+            Toast.makeText(this, "Login failed. Try again!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == Activity.RESULT_OK) {
-                // TODO: Implement successful signUp logic here , SharedPreferencesbe menteni a felhasználó adatait és átnavigálni a CameraActivityre
-                // By default we just finish the Activity and log them in automatically
-                val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
-                val editor  = userLogin.edit()
-                editor.clear()
-                editor.putString("userName", emailText.text.toString())
-                editor.putString("password", passwordText.text.toString())
-                editor.apply()  // editor.commit()
-                val cameraIntent = Intent(applicationContext, TestActivity::class.java)
-                startActivity(cameraIntent)
-                //this.finish()
+        try {
+            if (requestCode == REQUEST_SIGNUP) {
+                if (resultCode == Activity.RESULT_OK) {
+                    // TODO: Implement successful signUp logic here , SharedPreferencesbe menteni a felhasználó adatait és átnavigálni a CameraActivityre
+                    // By default we just finish the Activity and log them in automatically
+                    val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+                    val editor  = userLogin.edit()
+                    editor.clear()
+                    editor.putString("userName", emailText.text.toString())
+                    editor.putString("password", passwordText.text.toString())
+                    editor.apply()  // editor.commit()
+                    val cameraIntent = Intent(applicationContext, TestActivity::class.java)
+                    startActivity(cameraIntent)
+                    //this.finish()
+                }
             }
+        }catch (ex : Exception){
+            Toast.makeText(this, ex.toString(),
+                    Toast.LENGTH_SHORT).show()
         }
     }
 

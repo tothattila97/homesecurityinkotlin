@@ -19,17 +19,43 @@
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
 
-        <!--  Name Label -->
+        <!--  UserName Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_name"
+            <EditText android:id="@+id/input_firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Name" />
+                android:hint="First name" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--  UserName Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_lastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="Last name" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--  UserName Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="Username" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Email Label -->

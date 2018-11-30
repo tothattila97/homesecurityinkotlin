@@ -1,5 +1,6 @@
 package production.toth.attila.homesecurityinkotlin
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.media.Image
 import android.support.v4.app.Fragment
@@ -50,7 +51,8 @@ class ImageConsumer(
                 if (percent > 3) {
                     //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
-                        RetrofitNetworkService().uploadImage(uploadFile)
+                        val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
+                        RetrofitNetworkService().uploadImage(uploadFile, switchValues.getBoolean("emailSwitch", false))
                         //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }

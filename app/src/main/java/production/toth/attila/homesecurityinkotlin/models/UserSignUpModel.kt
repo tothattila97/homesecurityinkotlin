@@ -8,4 +8,6 @@ data class UserSignUpModel(val email: String,
                            val confirmPassword: String,
                            val notifiablePhoneNumber: String,
                            val dateOfBirth: Date,
-                           val gender: Gender)
+                           val gender: Gender,
+                           val firstName: String,
+                           val lastName: String)

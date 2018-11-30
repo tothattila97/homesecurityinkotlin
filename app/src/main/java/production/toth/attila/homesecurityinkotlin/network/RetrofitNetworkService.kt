@@ -27,7 +27,7 @@ class RetrofitNetworkService() {
         // Saját cookie interceptor használata
         val addCookiesInterceptor = createAddCookiesInterceptor()
         val receivedCookiesInterceptor = createReceivedCookiesInterceptor()
-        val client = OkHttpClient.Builder().addInterceptor(interceptor)/*.addInterceptor(addCookiesInterceptor).addInterceptor(receivedCookiesInterceptor)*/.build()
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(addCookiesInterceptor).addInterceptor(receivedCookiesInterceptor).build()
         service = Retrofit.Builder()
                 .baseUrl(localTestUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -54,12 +54,12 @@ class RetrofitNetworkService() {
         }
     }
 
-    fun uploadImage(file: File) {
+    fun uploadImage(file: File, emailNotific: Boolean) {
         val reqFile = RequestBody.create(MediaType.parse("image/jpg"), file)    //      image/* helyett jpg odaírva
         val body = MultipartBody.Part.createFormData("upload", file.name, reqFile)
         val name = RequestBody.create(MediaType.parse("text/plain"), "upload_test")
 
-        val req = service.postImage(body, name)
+        val req = service.postImage(UploadModel(file, emailNotific))
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -135,7 +135,7 @@ class RetrofitNetworkService() {
                     try {
                         val json = JSONObject(response.body()?.string())
                         val email = json.getString("email")
-                        val surName = json.getString("surName")
+                        val surName = json.getString("firstName")
                         val lastName = json.getString("lastName")
                         val phoneNumber = json.getString("phoneNumber")
                         val dateOfBirth = json.get("dateOfBirth") as Date

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="Attila Toth Production"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:paddingStart="@dimen/profile_data_padding"
         android:paddingTop="@dimen/about_padding"
         android:paddingBottom="@dimen/about_padding"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Debrecen, HB 4031"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:paddingStart="@dimen/profile_data_padding"
         android:paddingTop="@dimen/about_padding"
         android:paddingBottom="@dimen/about_padding"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:text="Support:"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingTop="@dimen/about_padding"
             android:paddingBottom="@dimen/about_padding"
@@ -56,9 +56,9 @@
             android:autoLink="email"
             android:clickable="true"
             android:focusable="true"
-            android:text="support@homesec.com"
+            android:text="otthonbiztonsagbme@gmail.com"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="Marketing:"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:paddingStart="@dimen/profile_data_padding"
             android:paddingTop="@dimen/about_padding"
             android:paddingBottom="@dimen/about_padding"
@@ -83,9 +83,9 @@
             android:autoLink="email"
             android:clickable="true"
             android:focusable="true"
-            android:text="marketing@homesec.com"
+            android:text="otthonbiztonsagbme@gmail.com"
             android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 
 

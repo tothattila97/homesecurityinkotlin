@@ -23,12 +23,14 @@ class SignUpActivity() : AppCompatActivity() {
         val TAG = "SignUpActivity"
     }
 
-    lateinit var nameText: EditText
+    lateinit var usernameText: EditText
     lateinit var emailText: EditText
     lateinit var passwordText: EditText
     lateinit var confirmPasswordText: EditText
     lateinit var phoneNumber: EditText
     lateinit var dateOfBirth: EditText
+    lateinit var firstName: EditText
+    lateinit var lastName: EditText
     lateinit var genderRadioGroup: RadioGroup
     lateinit var manGenderRadio: RadioButton
     lateinit var womanGenderRadio: RadioButton
@@ -42,12 +44,14 @@ class SignUpActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        nameText= findViewById(R.id.input_name)
+        usernameText= findViewById(R.id.input_username)
         emailText = findViewById(R.id.input_email)
         passwordText= findViewById(R.id.input_password)
         confirmPasswordText = findViewById(R.id.input_confirm_password)
         phoneNumber = findViewById(R.id.input_notifiable_phonenumber)
         dateOfBirth = findViewById(R.id.input_dateOfBirth)
+        firstName = findViewById(R.id.input_firstName)
+        lastName = findViewById(R.id.input_lastName)
         genderRadioGroup = findViewById(R.id.gender_radioGroup)
         manGenderRadio = findViewById(R.id.gender_man)
         womanGenderRadio = findViewById(R.id.gender_woman)
@@ -98,11 +102,13 @@ class SignUpActivity() : AppCompatActivity() {
         progressDialog.setMessage("Creating Account...")
         progressDialog.show()
 
-        val name = nameText.text.toString()
+        val name = usernameText.text.toString()
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
         val confirmPassword = confirmPasswordText.text.toString()
         val phoneNumber = phoneNumber.text.toString()
+        val firstName = firstName.text.toString()
+        val lastName = lastName.text.toString()
         val dateOfBirth = convertStringToDate(dateOfBirth.text.toString())
         var gender: Gender = Gender.Default
         when(genderRadioGroup.checkedRadioButtonId){
@@ -113,22 +119,27 @@ class SignUpActivity() : AppCompatActivity() {
 
         // TODO: Implement your own signup logic here.
         val signUpService = RetrofitNetworkService()
-        val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender)
+        val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender, firstName, lastName)
         val result = signUpService.signup(signUpModel)
 
-        Handler().postDelayed(
-                {
-                    // On complete call either onSignupSuccess or onSignupFailed
-                    // depending on success
-                    onSignUpSuccess()
-                    // onSignupFailed();
-                    progressDialog.dismiss()
-                }, 3000)
+        if(result){
+            Handler().postDelayed(
+                    {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        onSignUpSuccess()
+                        // onSignupFailed();
+                        progressDialog.dismiss()
+                    }, 2000)
+        }
+        else
+            Toast.makeText(this, "Registration failed. Try again!", Toast.LENGTH_SHORT).show()
+
     }
 
      private fun onSignUpSuccess() {
          signUpButton.isEnabled = true
-        setResult(Activity.RESULT_OK, null)
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 
@@ -140,16 +151,16 @@ class SignUpActivity() : AppCompatActivity() {
     private fun validate(): Boolean {
         var valid = true
 
-        val name = nameText.text.toString()
+        val name = usernameText.text.toString()
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
         val confirmPassword = confirmPasswordText.text.toString()
 
         if (name.isEmpty() || name.length < 3) {
-            nameText.error = "at least 3 characters"
+            usernameText.error = "at least 3 characters"
             valid = false
         } else {
-            nameText.error = null
+            usernameText.error = null
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

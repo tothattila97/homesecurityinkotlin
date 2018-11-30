@@ -36,7 +36,7 @@ class ProfileFragment: Fragment() {
         profileGender = rootView.findViewById(R.id.profile_gender)
 
         val userProfileModel = RetrofitNetworkService().profile()
-        profileName.text = "${userProfileModel?.surname} ${userProfileModel?.lastName}"
+        profileName.text = "${userProfileModel?.firstName} ${userProfileModel?.lastName}"
         profileEmail.text = userProfileModel?.email
         profilePhoneNumber.text = userProfileModel?.phoneNumber
         profileBirthDate.text = userProfileModel?.dateOfBirth.toString()
@@ -47,7 +47,7 @@ class ProfileFragment: Fragment() {
         else if (userProfileModel?.gender == Gender.Woman)
             Glide.with(this).load("https://www.healthline.com/hlcmsresource/images/medical-reviewer/placeholder-woman.png").into(genderPics)
         //else
-            //genderPics.contentDescription = userProfileModel!!.surname[0] as CharSequence
+            //genderPics.contentDescription = userProfileModel!!.firstName[0] as CharSequence
 
         return rootView
     }

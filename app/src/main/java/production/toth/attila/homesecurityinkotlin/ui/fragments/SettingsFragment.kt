@@ -35,21 +35,21 @@ class SettingsFragment: Fragment(){
         emailSwitch.setOnClickListener {
             var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
             var editor  = switchesValues.edit()
-            editor.putString("emailSwitch", emailSwitch.isChecked.toString())
+            editor.putBoolean("emailSwitch", emailSwitch.isChecked)
             editor.apply()
         }
         smsSwitch = rootView.findViewById(R.id.sms_switch)
         smsSwitch.setOnClickListener {
             var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
             var editor  = switchesValues.edit()
-            editor.putString("smsSwitch", smsSwitch.isChecked.toString())
+            editor.putBoolean("smsSwitch", smsSwitch.isChecked)
             editor.apply()
         }
         noiseSwitch = rootView.findViewById(R.id.noise_switch)
         noiseSwitch.setOnClickListener {
             var switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
             var editor  = switchesValues.edit()
-            editor.putString("noiseSwitch", noiseSwitch.isChecked.toString())
+            editor.putBoolean("noiseSwitch", noiseSwitch.isChecked)
             editor.apply()
         }
         languageTextView = rootView.findViewById(R.id.languageSetting_textView)
