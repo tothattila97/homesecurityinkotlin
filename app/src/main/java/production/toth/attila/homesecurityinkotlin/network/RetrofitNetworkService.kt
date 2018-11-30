@@ -20,7 +20,7 @@ class RetrofitNetworkService() {
 
     init {
         val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val localTestUrl =  "http://192.168.0.248:44319/"
+        val homeSecBaseUrl = "http://homesecuritythesis.azurewebsites.net/"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -29,7 +29,7 @@ class RetrofitNetworkService() {
         val receivedCookiesInterceptor = createReceivedCookiesInterceptor()
         val client = OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(addCookiesInterceptor).addInterceptor(receivedCookiesInterceptor).build()
         service = Retrofit.Builder()
-                .baseUrl(localTestUrl)
+                .baseUrl(homeSecBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
