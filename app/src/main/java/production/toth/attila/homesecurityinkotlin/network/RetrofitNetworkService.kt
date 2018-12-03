@@ -1,6 +1,7 @@
 package production.toth.attila.homesecurityinkotlin.network
 
 import android.content.Context
+import android.net.Uri
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONException
@@ -12,7 +13,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class RetrofitNetworkService(val context: Context) {
 
@@ -21,7 +24,7 @@ class RetrofitNetworkService(val context: Context) {
 
     init {
         val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val homeSecBaseUrl = "http://homesecuritythesis.azurewebsites.net/"
+        val homeSecBaseUrl = "http://9916405e.ngrok.io"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -32,6 +35,8 @@ class RetrofitNetworkService(val context: Context) {
                 .addInterceptor(interceptor)
                 .addInterceptor(AddCookiesInterceptor(context))
                 .addInterceptor(ReceivedCookiesInterceptor(context))
+                .connectTimeout(40, TimeUnit.SECONDS)
+                .readTimeout(40, TimeUnit.SECONDS)
                 .build()
         service = Retrofit.Builder()
                 .baseUrl(homeSecBaseUrl)
@@ -65,14 +70,29 @@ class RetrofitNetworkService(val context: Context) {
     }
 
     fun uploadImage(file: File, emailNotific: Boolean) {
-        val reqFile = RequestBody.create(MediaType.parse("image/jpg"), file)    //      image/* helyett jpg odaírva
-        val body = MultipartBody.Part.createFormData("upload", file.name, reqFile)
-        val name = RequestBody.create(MediaType.parse("text/plain"), "upload_test")
+        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)    //      image/* helyett jpg odaírva
+        val body = MultipartBody.Part.createFormData("imageFile", file.name, reqFile)
+        val name = RequestBody.create(MediaType.parse("text/plain"), emailNotific.toString())
 
-        val req = service.postImage(UploadModel(file, emailNotific))
+        val uploadService = Retrofit.Builder()
+                .baseUrl("http://9916405e.ngrok.io")
+                .client(OkHttpClient.Builder()
+                        .addInterceptor(HttpLoggingInterceptor())
+                        .addInterceptor(AddCookiesInterceptor(context))
+                        .addInterceptor(ReceivedCookiesInterceptor(context))
+                        .connectTimeout(40, TimeUnit.SECONDS)
+                        .readTimeout(40, TimeUnit.SECONDS)
+                        .build())
+                .build()
+                .create(IRetrofitNetworkService::class.java)
+
+
+        val req = uploadService.postImage(body, name)
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if(response.isSuccessful){
 
+                }
             }
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
         })
@@ -138,12 +158,13 @@ class RetrofitNetworkService(val context: Context) {
                     try {
                         val json = JSONObject(response.body()?.string())
                         val email = json.getString("email")
-                        val surName = json.getString("firstName")
-                        val lastName = json.getString("lastName")
-                        val phoneNumber = json.getString("phoneNumber")
-                        val dateOfBirth = json.get("dateOfBirth") as Date
-                        val gender = json.get("gender") as Gender
-                        val profileModel = UserProfileModel(email, surName, lastName, phoneNumber, dateOfBirth, gender)
+                        val surName = json.optString("firstName", "")
+                        val lastName = json.optString("lastName", "")
+                        val phoneNumber = json.optString("phoneNumber", "")
+                        val birthString = json.getString("dateOfBirth")
+                        val dateOfBirth = SimpleDateFormat("yyyy-MM-dd").parse(birthString)
+                        val genderString = json.getString("gender")
+                        val profileModel = UserProfileModel(email, surName, lastName, phoneNumber, dateOfBirth, Gender.Man)
                         httpCallback.getUserProfile(profileModel)
                     } catch (ex: JSONException) {
                         ex.printStackTrace()

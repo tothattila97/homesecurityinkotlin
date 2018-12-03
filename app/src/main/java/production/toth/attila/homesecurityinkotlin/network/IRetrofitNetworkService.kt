@@ -9,8 +9,9 @@ import retrofit2.http.*
 
 interface IRetrofitNetworkService {
 
+    @Multipart
     @POST("api/upload/")
-    abstract fun postImage(@Body uploadModel: UploadModel): Call<ResponseBody>
+    abstract fun postImage(@Part imageFile: MultipartBody.Part, @Part("isNotifiableByEmail") isNotifiableByEmail: RequestBody ): Call<ResponseBody>
 
     @POST("api/account/login")
     abstract fun login(@Body loginModel: UserLoginModel): Call<ResponseBody>
@@ -21,10 +22,10 @@ interface IRetrofitNetworkService {
     @POST("api/account/logout")
     abstract fun logOut() : Call<ResponseBody>
 
-    @GET("api/account/profile")
+    @GET("api/profile")
     abstract fun profile(): Call<ResponseBody>
 
-    @PUT("api/account/profile")
+    @PUT("api/profile")
     abstract fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
 
     @GET("api/account/changepassword")

@@ -15,6 +15,7 @@ class ReceivedCookiesInterceptor(private val context: Context) // AddCookiesInte
 
         if (!originalResponse.headers("Set-Cookie").isEmpty()) {
             val cookies = PreferenceManager.getDefaultSharedPreferences(context).getStringSet("PREF_COOKIES", HashSet()) as HashSet<String>
+            cookies.clear()
 
             for (header in originalResponse.headers("Set-Cookie")) {
                 cookies.add(header)
