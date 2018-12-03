@@ -9,7 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.R
+import production.toth.attila.homesecurityinkotlin.models.UserProfileModel
+import production.toth.attila.homesecurityinkotlin.network.IHttpCallback
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import production.toth.attila.homesecurityinkotlin.ui.activities.LoginActivity
 
@@ -58,15 +61,22 @@ class SettingsFragment: Fragment(){
         logOutTextView = rootView.findViewById(R.id.log_out_textView)
 
         logOutTextView.setOnClickListener {
-            var result = RetrofitNetworkService().logout()
-            if(result){
-                val userLogin =  activity.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
-                val editor  = userLogin.edit()
-                editor.clear()
-                editor.apply()
-                val logOutIntent = Intent(activity, LoginActivity::class.java)
-                startActivity(logOutIntent)
-            }
+            RetrofitNetworkService(context).logout(object : IHttpCallback {
+                override fun getIsSucceeded(succeeded: Boolean) {
+                    if(succeeded){
+                        val userLogin =  activity.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
+                        val editor  = userLogin.edit()
+                        editor.clear()
+                        editor.apply()
+                        val logOutIntent = Intent(activity, LoginActivity::class.java)
+                        startActivity(logOutIntent)
+                    }
+                    else
+                        Toast.makeText(context, "Log out failed. Try again!", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun getUserProfile(userProfile: UserProfileModel?) {}
+            })
         }
 
         return rootView

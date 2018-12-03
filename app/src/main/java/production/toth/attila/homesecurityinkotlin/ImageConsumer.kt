@@ -52,7 +52,7 @@ class ImageConsumer(
                     //callback.playRingtone()
                     firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
                         val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
-                        RetrofitNetworkService().uploadImage(uploadFile, switchValues.getBoolean("emailSwitch", false))
+                        RetrofitNetworkService(a.context).uploadImage(uploadFile, switchValues.getBoolean("emailSwitch", false))
                         //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }

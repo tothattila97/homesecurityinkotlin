@@ -8,13 +8,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.models.UserLoginModel
+import production.toth.attila.homesecurityinkotlin.models.UserProfileModel
+import production.toth.attila.homesecurityinkotlin.network.IHttpCallback
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
-import java.lang.Exception
 
-class LoginActivity() : AppCompatActivity() {
+class LoginActivity() : AppCompatActivity(){
 
     companion object {
         val TAG = "LoginActivity"
@@ -39,17 +43,19 @@ class LoginActivity() : AppCompatActivity() {
         val userName = userLogin.getString("userName","")
         val password = userLogin.getString("password","")
         if (userName != "" && password != ""){
-            var result = RetrofitNetworkService().login(UserLoginModel(userName,password))
-            if (result){
-                var automaticLogInIntent = Intent(this, TestActivity::class.java)
-                startActivity(automaticLogInIntent)
-            }
+            RetrofitNetworkService(baseContext).login(UserLoginModel(userName,password), object : IHttpCallback {
+                override fun getIsSucceeded(succeeded: Boolean) {
+                    if (succeeded){
+                        var automaticLogInIntent = Intent(baseContext, TestActivity::class.java)
+                        startActivity(automaticLogInIntent)
+                    }
+                }
+                override fun getUserProfile(userProfile: UserProfileModel?) {}
+            })
         }
 
         loginButton.setOnClickListener {
             login()
-            //val cameraIntent = Intent(applicationContext, TestActivity::class.java)
-            //startActivity(cameraIntent)
         }
 
         signUpLink.setOnClickListener {
@@ -80,21 +86,24 @@ class LoginActivity() : AppCompatActivity() {
         val password = passwordText.text.toString()
 
         // TODO: Implement your own authentication logic here.
-        val loginService = RetrofitNetworkService()
+        val loginService = RetrofitNetworkService(baseContext)
         val loginModel = UserLoginModel(email,password)
-        val result = loginService.login(loginModel)
-
-        if(result){
-            Handler().postDelayed(
-                    {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess()
-                        // onLoginFailed();
-                        progressDialog.dismiss()
-                    }, 2000)
-        }
-        else
-            Toast.makeText(this, "Login failed. Try again!", Toast.LENGTH_SHORT).show()
+        loginService.login(loginModel, object:  IHttpCallback{
+            override fun getIsSucceeded(succeeded: Boolean) {
+                if(succeeded){
+                    Handler().postDelayed(
+                            {
+                                // On complete call either onLoginSuccess or onLoginFailed
+                                onLoginSuccess()
+                                // onLoginFailed();
+                                progressDialog.dismiss()
+                            }, 2000)
+                }
+                else
+                    Toast.makeText(applicationContext, "Login failed. Try again!", Toast.LENGTH_SHORT).show()
+            }
+            override fun getUserProfile(userProfile: UserProfileModel?) {}
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

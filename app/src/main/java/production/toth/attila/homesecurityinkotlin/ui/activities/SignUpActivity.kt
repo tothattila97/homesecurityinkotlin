@@ -11,7 +11,9 @@ import android.util.Log
 import android.widget.*
 import production.toth.attila.homesecurityinkotlin.R
 import production.toth.attila.homesecurityinkotlin.models.Gender
+import production.toth.attila.homesecurityinkotlin.models.UserProfileModel
 import production.toth.attila.homesecurityinkotlin.models.UserSignUpModel
+import production.toth.attila.homesecurityinkotlin.network.IHttpCallback
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 import java.text.DateFormat
 import java.util.*
@@ -118,23 +120,26 @@ class SignUpActivity() : AppCompatActivity() {
         }
 
         // TODO: Implement your own signup logic here.
-        val signUpService = RetrofitNetworkService()
+        val signUpService = RetrofitNetworkService(baseContext)
         val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender, firstName, lastName)
-        val result = signUpService.signup(signUpModel)
+        signUpService.signup(signUpModel, object : IHttpCallback {
+            override fun getIsSucceeded(succeeded: Boolean) {
+                if(succeeded){
+                    Handler().postDelayed(
+                            {
+                                // On complete call either onSignupSuccess or onSignupFailed
+                                // depending on success
+                                onSignUpSuccess()
+                                // onSignupFailed();
+                                progressDialog.dismiss()
+                            }, 2000)
+                }
+                else
+                    Toast.makeText(baseContext, "Registration failed. Try again!", Toast.LENGTH_SHORT).show()
+            }
 
-        if(result){
-            Handler().postDelayed(
-                    {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignUpSuccess()
-                        // onSignupFailed();
-                        progressDialog.dismiss()
-                    }, 2000)
-        }
-        else
-            Toast.makeText(this, "Registration failed. Try again!", Toast.LENGTH_SHORT).show()
-
+            override fun getUserProfile(userProfile: UserProfileModel?) {}
+        })
     }
 
      private fun onSignUpSuccess() {

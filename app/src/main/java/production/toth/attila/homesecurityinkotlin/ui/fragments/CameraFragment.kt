@@ -133,11 +133,11 @@ class CameraFragment: Fragment(), INotificationCallback {
 
     override fun onPause() {
         super.onPause()
-        releaseCamera()
-        stopRecording()
+        //releaseCamera()
+        //stopRecording()
     }
 
-    public fun releaseCamera() {
+    fun releaseCamera() {
         if(mCamera != null){
             mCamera?.release()
             mCamera = null
