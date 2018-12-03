@@ -19,7 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.*
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.BlockingQueue
@@ -32,8 +31,6 @@ class CameraFragment: Fragment(), INotificationCallback {
     private var mPreview: CameraPreview? = null
     private val TAG: String = "CameraActivityTag"
 
-    //private val PermissionsRequestCode = 123
-    //private lateinit var managePermissions: ManagePermissions
     private lateinit var imageConsumer: ImageConsumer
     private var previewPictures: BlockingQueue<Bitmap> = LinkedBlockingQueue<Bitmap>(15)
     private var timeStart: Long = 0; private var timeDifference: Long = 0
@@ -48,13 +45,13 @@ class CameraFragment: Fragment(), INotificationCallback {
     private lateinit var audioConsumer: AudioConsumer
     private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
     private var audioConsumerThread: Thread? = null
-    var rootview: View? = null
+    var rootView: View? = null
 
     private val previewCallback = Camera.PreviewCallback { data, _ ->
         timeDifference = System.currentTimeMillis() - timeStart
         if (timeDifference >= 500 && isSupervisionStarted) {
             val previewPicture: ByteArray = data ?: run {
-                Log.d(TAG, ("A camera preview kép kiolvasása nem sikerült, az értéke null"))
+                Log.d(TAG, ("Camera preview picture read did not succeeded, the value is null"))
                 return@PreviewCallback
             }
 
@@ -69,7 +66,7 @@ class CameraFragment: Fragment(), INotificationCallback {
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             } catch (e: InterruptedException) {
-                Log.d(TAG, "A bájttömb belehelyezése nem sikerült a queueba:  ${e.message}")
+                Log.d(TAG, "Byte array can not put into the queue: ${e.message}")
             }
         }
     }
@@ -110,16 +107,16 @@ class CameraFragment: Fragment(), INotificationCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootview = inflater?.inflate(R.layout.fragment_camera, container, false)
+        rootView = inflater?.inflate(R.layout.fragment_camera, container, false)
 
         // Set the Preview view as the content of our activity.
         mPreview?.also {
-            val preview: FrameLayout = rootview!!.findViewById(R.id.camera_preview)
+            val preview: FrameLayout = rootView!!.findViewById(R.id.camera_preview)
             //if(it.parent != null) { (it.parent as ViewGroup).removeView(it)}
             preview.addView(it)
         }
 
-        val captureButton: Button = rootview!!.findViewById(R.id.button_capture)
+        val captureButton: Button = rootView!!.findViewById(R.id.button_capture)
         captureButton.setOnClickListener {
             timeStart = System.currentTimeMillis()
             isSupervisionStarted = true
@@ -128,7 +125,7 @@ class CameraFragment: Fragment(), INotificationCallback {
             //startRecording()
         }
 
-        return rootview
+        return rootView
     }
 
     override fun onPause() {
@@ -159,16 +156,12 @@ class CameraFragment: Fragment(), INotificationCallback {
         }
     }
 
-    private fun Context.toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
     override fun playRingtone() {
         try {
             val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val ringtone = RingtoneManager.getRingtone(context, notification)
             ringtone.play()
-            //TODO: Valahol leállítani is a ringtonet stop()-al
+            //TODO: Somewhere should to stop the ringtone
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -189,24 +182,24 @@ class CameraFragment: Fragment(), INotificationCallback {
 
     private fun stopRecording(){
         if(recorder != null){
-            recorder?.stop();
-            recorder?.release();
-            recorder = null;
-            audioConsumerThread = null;
+            recorder?.stop()
+            recorder?.release()
+            recorder = null
+            audioConsumerThread = null
         }
     }
 
     override fun sendSmsNotification() {
-        val manager = SmsManager.getDefault();
+        val manager = SmsManager.getDefault()
 
-        val piSend = PendingIntent.getBroadcast(context, 0, Intent("SMS_SENT"), 0);
-        val piDelivered = PendingIntent.getBroadcast(context, 0,  Intent("SMS_DELIVERED"), 0);
+        val piSend = PendingIntent.getBroadcast(context, 0, Intent("SMS_SENT"), 0)
+        val piDelivered = PendingIntent.getBroadcast(context, 0,  Intent("SMS_DELIVERED"), 0)
 
         val userLogin = context.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
-        val phonenumber = userLogin.getString("userLogin", "")
-        val message: String = "Mukodik a szakdogam sms ertesites funkcioja :)"
+        val phoneNumber = userLogin.getString("userLogin", "")
+        val message = "Something happened in your home. Please check your uploaded images."
 
-        manager.sendTextMessage(phonenumber, null, message, piSend, piDelivered)
+        manager.sendTextMessage(phoneNumber, null, message, piSend, piDelivered)
     }
 
     internal class MyFaceDetectionListener : Camera.FaceDetectionListener {

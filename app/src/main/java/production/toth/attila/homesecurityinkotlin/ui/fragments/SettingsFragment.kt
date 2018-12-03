@@ -27,12 +27,8 @@ class SettingsFragment: Fragment(){
     lateinit var languageTextView: TextView
     lateinit var logOutTextView: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater!!.inflate(R.layout.fragment_settings, container, false);
+        rootView = inflater!!.inflate(R.layout.fragment_settings, container, false)
 
         emailSwitch = rootView.findViewById(R.id.email_switch)
         emailSwitch.setOnClickListener {
@@ -82,12 +78,4 @@ class SettingsFragment: Fragment(){
         return rootView
     }
 
-    override fun onPause() {
-        super.onPause()
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

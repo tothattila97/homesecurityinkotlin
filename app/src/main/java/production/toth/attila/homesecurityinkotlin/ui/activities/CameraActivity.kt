@@ -9,7 +9,6 @@ import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
 import android.media.AudioFormat
 import android.media.AudioRecord
-import android.media.MediaRecorder
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Environment
@@ -81,7 +80,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         timeDifference = System.currentTimeMillis() - timeStart
         if (timeDifference >= 500 && isSupervisionStarted){
             val previewPicture: ByteArray = data ?: run {
-                Log.d(TAG, ("A camera preview kép kiolvasása nem sikerült, az értéke null"))
+                Log.d(TAG, ("Camera preview read did not succeeded, the value is null"))
                 return@PreviewCallback
             }
 
@@ -98,7 +97,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             }catch (e: InterruptedException){
-                Log.d(TAG, "A bájttömb belehelyezése nem sikerült a queueba:  ${e.message}")
+                Log.d(TAG, "Byte array can not put into the queue: ${e.message}")
             }
         }
     }
@@ -107,7 +106,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
 
-        val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val list = listOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
 
         //imageConsumer = ImageConsumer(previewPictures, this)
@@ -119,7 +118,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         val params: Camera.Parameters? = mCamera?.parameters
         val focusModes: List<String>? = params?.supportedFocusModes
         if (focusModes?.contains(Camera.Parameters.FOCUS_MODE_AUTO) == true) {
-            // Autofocus mode is supported
+            // autoFocus mode is supported
             val parameters: Camera.Parameters? = mCamera?.parameters
             parameters?.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
             mCamera?.parameters = parameters
@@ -237,28 +236,9 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
             val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val ringtone = RingtoneManager.getRingtone(applicationContext, notification)
             ringtone.play()
-            //TODO: Valahol leállítani is a ringtonet stop()-al
+            //TODO: Should to stop the ringtone
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-    private fun startRecording(){
-        recorder = AudioRecord(MediaRecorder.AudioSource.MIC,
-                RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-                RECORDER_AUDIO_ENCODING, bufferElementsToRec * bytesPerElement)
-
-        recorder?.startRecording()
-        audioConsumerThread = Thread(audioConsumer)
-        audioConsumerThread?.start()
-    }
-
-    private fun stopRecording(){
-        if(recorder != null){
-            recorder?.stop();
-            recorder?.release();
-            recorder = null;
-            audioConsumerThread = null;
         }
     }
 

@@ -19,7 +19,7 @@ import java.text.DateFormat
 import java.util.*
 
 
-class SignUpActivity() : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
     companion object {
         val TAG = "SignUpActivity"
@@ -50,7 +50,7 @@ class SignUpActivity() : AppCompatActivity() {
         emailText = findViewById(R.id.input_email)
         passwordText= findViewById(R.id.input_password)
         confirmPasswordText = findViewById(R.id.input_confirm_password)
-        phoneNumber = findViewById(R.id.input_notifiable_phonenumber)
+        phoneNumber = findViewById(R.id.input_notifiable_phoneNumber)
         dateOfBirth = findViewById(R.id.input_dateOfBirth)
         firstName = findViewById(R.id.input_firstName)
         lastName = findViewById(R.id.input_lastName)
@@ -58,11 +58,10 @@ class SignUpActivity() : AppCompatActivity() {
         manGenderRadio = findViewById(R.id.gender_man)
         womanGenderRadio = findViewById(R.id.gender_woman)
         notBinaryGenderRadio = findViewById(R.id.gender_notBinary)
-        signUpButton= findViewById(R.id.btn_signup)
+        signUpButton= findViewById(R.id.btn_signUp)
         loginLink = findViewById(R.id.link_login)
 
         val date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            // TODO Auto-generated method stub
             birthCalendar.set(Calendar.YEAR, year)
             birthCalendar.set(Calendar.MONTH, monthOfYear)
             birthCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -77,7 +76,7 @@ class SignUpActivity() : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
-            signup()
+            signUp()
         }
 
         loginLink.setOnClickListener {
@@ -88,7 +87,7 @@ class SignUpActivity() : AppCompatActivity() {
         }
     }
 
-    private fun signup() {
+    private fun signUp() {
         Log.d(TAG, "SignUp")
 
         if (!validate()) {
@@ -119,7 +118,6 @@ class SignUpActivity() : AppCompatActivity() {
             R.id.gender_notBinary -> gender = Gender.NotBinary
         }
 
-        // TODO: Implement your own signup logic here.
         val signUpService = RetrofitNetworkService(baseContext)
         val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender, firstName, lastName)
         signUpService.signup(signUpModel, object : IHttpCallback {
@@ -127,7 +125,7 @@ class SignUpActivity() : AppCompatActivity() {
                 if(succeeded){
                     Handler().postDelayed(
                             {
-                                // On complete call either onSignupSuccess or onSignupFailed
+                                // On complete call either onSignUpSuccess or onSignUpFailed
                                 // depending on success
                                 onSignUpSuccess()
                                 // onSignupFailed();
@@ -187,7 +185,7 @@ class SignUpActivity() : AppCompatActivity() {
             valid = false
         }
         else if(!confirmPassword.equals(password)) {
-            confirmPasswordText.error = "password and confirmpassword must be the same"
+            confirmPasswordText.error = "password and confirmPassword must be the same"
             valid = false
         } else { confirmPasswordText.error = null}
 

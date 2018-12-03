@@ -22,10 +22,6 @@ class ProfileFragment: Fragment() {
     lateinit var profileBirthDate: TextView
     lateinit var profileGender: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView= inflater?.inflate(R.layout.fragment_profile, container, false)
 
@@ -58,7 +54,4 @@ class ProfileFragment: Fragment() {
         return rootView
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

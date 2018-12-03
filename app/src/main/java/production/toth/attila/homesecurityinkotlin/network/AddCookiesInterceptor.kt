@@ -8,7 +8,7 @@ import java.io.IOException
 
 
 class AddCookiesInterceptor(// We're storing our stuff in a database made just for cookies called PREF_COOKIES.
-        // I reccomend you do this, and don't change this default value.
+        // I recommend you do this, and don't change this default value.
         private val context: Context) : Interceptor {
 
     @Throws(IOException::class)
@@ -19,12 +19,12 @@ class AddCookiesInterceptor(// We're storing our stuff in a database made just f
 
         // Use the following if you need everything in one line.
         // Some APIs die if you do it differently.
-        var cookiestring = ""
+        var cookieString = ""
         for (cookie in preferences) {
             val parser = cookie.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            cookiestring = cookiestring + parser[0] + "; "
+            cookieString = cookieString + parser[0] + "; "
         }
-        builder.addHeader("Cookie", cookiestring)
+        builder.addHeader("Cookie", cookieString)
 
 
        /* for (cookie in preferences) {

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter
 
 class NavigationPagerAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        const val NUM_PAGES = 4;
+        const val NUM_PAGES = 4
     }
 
     override fun getCount(): Int {

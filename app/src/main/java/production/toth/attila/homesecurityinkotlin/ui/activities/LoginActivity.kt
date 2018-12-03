@@ -18,7 +18,7 @@ import production.toth.attila.homesecurityinkotlin.models.UserProfileModel
 import production.toth.attila.homesecurityinkotlin.network.IHttpCallback
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
 
-class LoginActivity() : AppCompatActivity(){
+class LoginActivity : AppCompatActivity(){
 
     companion object {
         val TAG = "LoginActivity"
@@ -37,7 +37,7 @@ class LoginActivity() : AppCompatActivity(){
         emailText = findViewById(R.id.input_email)
         passwordText= findViewById(R.id.input_password)
         loginButton = findViewById(R.id.btn_login)
-        signUpLink = findViewById(R.id.link_signup)
+        signUpLink = findViewById(R.id.link_signUp)
 
         val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
         val userName = userLogin.getString("userName","")
@@ -110,7 +110,6 @@ class LoginActivity() : AppCompatActivity(){
         try {
             if (requestCode == REQUEST_SIGNUP) {
                 if (resultCode == Activity.RESULT_OK) {
-                    // TODO: Implement successful signUp logic here , SharedPreferencesbe menteni a felhasználó adatait és átnavigálni a CameraActivityre
                     // By default we just finish the Activity and log them in automatically
                     val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
                     val editor  = userLogin.edit()
@@ -134,7 +133,6 @@ class LoginActivity() : AppCompatActivity(){
         moveTaskToBack(true)
     }
 
-    //TODO: Sikeres bejelentkezés esetén a felhasználó adatait SharedPreferencesbe kell tenni
     private fun onLoginSuccess() {
         loginButton.isEnabled = true
         val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)

@@ -36,10 +36,14 @@ class TestActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.action_one -> {viewPager.setCurrentItem(0); true}
-                R.id.action_two -> {viewPager.setCurrentItem(1); true}
-                R.id.action_three -> {viewPager.setCurrentItem(2); true}
-                R.id.action_four -> {viewPager.setCurrentItem(3); true}
+                R.id.action_one -> {
+                    viewPager.currentItem = 0; true}
+                R.id.action_two -> {
+                    viewPager.currentItem = 1; true}
+                R.id.action_three -> {
+                    viewPager.currentItem = 2; true}
+                R.id.action_four -> {
+                    viewPager.currentItem = 3; true}
                 else -> {
                     false
                 }
@@ -57,8 +61,8 @@ class TestActivity : AppCompatActivity() {
                 else{
                     bottomNavigationView.menu.getItem(0).isChecked = false
                 }
-                bottomNavigationView.getMenu().getItem(position).isChecked = true;
-                menuItem = bottomNavigationView.getMenu().getItem(position);
+                bottomNavigationView.menu.getItem(position).isChecked = true
+                menuItem = bottomNavigationView.menu.getItem(position)
             }
             override fun onPageSelected(position: Int) {
 
