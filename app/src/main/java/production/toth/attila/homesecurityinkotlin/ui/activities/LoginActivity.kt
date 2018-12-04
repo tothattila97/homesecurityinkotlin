@@ -25,10 +25,10 @@ class LoginActivity : AppCompatActivity(){
         val REQUEST_SIGNUP = 1
     }
 
-    lateinit var emailText: EditText
-    lateinit var passwordText: EditText
-    lateinit var loginButton: Button
-    lateinit var signUpLink: TextView
+    private lateinit var emailText: EditText
+    private lateinit var passwordText: EditText
+    private lateinit var loginButton: Button
+    private lateinit var signUpLink: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity(){
             RetrofitNetworkService(baseContext).login(UserLoginModel(userName,password), object : IHttpCallback {
                 override fun getIsSucceeded(succeeded: Boolean) {
                     if (succeeded){
-                        var automaticLogInIntent = Intent(baseContext, TestActivity::class.java)
+                        val automaticLogInIntent = Intent(baseContext, TestActivity::class.java)
                         startActivity(automaticLogInIntent)
                     }
                 }

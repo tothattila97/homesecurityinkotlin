@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Attila Toth Production"
+        android:text="@string/attila_toth_production"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:paddingStart="@dimen/profile_data_padding"
@@ -27,7 +27,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Debrecen, HB 4031"
+        android:text="@string/debrecen_hb_4031"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:paddingStart="@dimen/profile_data_padding"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Support:"
+            android:text="@string/support"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:paddingStart="@dimen/profile_data_padding"
@@ -56,7 +56,7 @@
             android:autoLink="email"
             android:clickable="true"
             android:focusable="true"
-            android:text="otthonbiztonsagbme@gmail.com"
+            android:text="@string/otthonbiztonsagbme_gmail_com"
             android:textColor="@color/black"
             android:textSize="18sp"/>
 
@@ -69,7 +69,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Marketing:"
+            android:text="@string/marketing"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:paddingStart="@dimen/profile_data_padding"
@@ -83,7 +83,7 @@
             android:autoLink="email"
             android:clickable="true"
             android:focusable="true"
-            android:text="otthonbiztonsagbme@gmail.com"
+            android:text="@string/otthonbiztonsagbme_gmail_com"
             android:textColor="@color/black"
             android:textSize="18sp"/>
     </LinearLayout>

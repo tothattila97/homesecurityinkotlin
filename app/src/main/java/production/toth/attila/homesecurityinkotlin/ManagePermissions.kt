@@ -8,9 +8,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
 
-class ManagePermissions(val activity: Activity, val list: List<String>, val code:Int) {
+class ManagePermissions(private val activity: Activity, private val list: List<String>, val code:Int) {
 
-    fun Context.toast(message: String) {
+    private fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -28,7 +28,7 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
     private fun isPermissionsGranted(): Int {
         // PERMISSION_GRANTED : Constant Value: 0
         // PERMISSION_DENIED : Constant Value: -1
-        var counter = 0;
+        var counter = 0
         for (permission in list) {
             counter += ContextCompat.checkSelfPermission(activity, permission)
         }
@@ -51,7 +51,7 @@ class ManagePermissions(val activity: Activity, val list: List<String>, val code
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("Need permission(s)")
         builder.setMessage("Some permissions are required to do the task.")
-        builder.setPositiveButton("OK", { dialog, which -> requestPermissions() })
+        builder.setPositiveButton("OK") { _, _ -> requestPermissions() }
         builder.setNeutralButton("Cancel", null)
         val dialog = builder.create()
         dialog.show()

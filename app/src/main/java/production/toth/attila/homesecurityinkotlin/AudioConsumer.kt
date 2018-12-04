@@ -4,26 +4,26 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import java.util.concurrent.BlockingQueue
 
-class AudioConsumer(var audios: BlockingQueue<ByteArray>,fragment: Fragment): Runnable{
+class AudioConsumer(private var audios: BlockingQueue<ByteArray>, fragment: Fragment): Runnable{
 
     private var firstAudioArray: ByteArray? =null
     private var secondAudioArray: ByteArray? =null
-    var starttime: Long = 0
-    var difference: Long = 0
+    private var startTime: Long = 0
+    private var difference: Long = 0
 
     override fun run() {
         try {
             secondAudioArray = audios.take()
             while (true){
                 firstAudioArray = audios.take()
-                starttime = System.currentTimeMillis()
+                startTime = System.currentTimeMillis()
                 val percent = getDifferenceInPercent(firstAudioArray, secondAudioArray)
                 if(percent > 5){
 
                 }
-                Log.i("homesecurityAudios", "Ekkora volt a két audiotömb közötti eltérés %-ban: $percent")
-                difference = System.currentTimeMillis() - starttime
-                Log.i("homesecurityAudios", "Megtörtént az összehasonlítás, ennyi idő volt: " + difference + "ms")
+                Log.i("homesecurityAudios", "This is the difference between two audio array in percentage: $percent")
+                difference = System.currentTimeMillis() - startTime
+                Log.i("homesecurityAudios", "Comparison was happened, elapsed time was: " + difference + "ms")
                 secondAudioArray = firstAudioArray
             }
 

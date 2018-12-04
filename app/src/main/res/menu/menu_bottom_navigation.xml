@@ -4,17 +4,17 @@
     <item
         android:id="@+id/action_one"
         android:icon="@android:drawable/ic_dialog_map"
-        android:title="Profile"/>
+        android:title="@string/profile"/>
     <item
         android:id="@+id/action_two"
         android:icon="@android:drawable/ic_search_category_default"
-        android:title="Settings"/>
+        android:title="@string/settings"/>
     <item
         android:id="@+id/action_three"
         android:icon="@android:drawable/ic_dialog_email"
-        android:title="Camera"/>
+        android:title="@string/camera"/>
     <item
         android:id="@+id/action_four"
         android:icon="@android:drawable/ic_popup_reminder"
-        android:title="About us"/>
+        android:title="@string/about_us"/>
 </menu>

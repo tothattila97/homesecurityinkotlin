@@ -6,7 +6,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.v7.widget.SwitchCompat
@@ -18,10 +18,10 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Email notification"
+            android:text="@string/email_notification"
             android:textSize="20sp"
-            android:textOn="On"
-            android:textOff="Off"
+            android:textOn="@string/on"
+            android:textOff="@string/off"
             android:checked="false"/>
         <!--android:theme="@style/CustomColorSwitchStyle"-->
 
@@ -34,10 +34,10 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Sms notification"
+            android:text="@string/sms_notification"
             android:textSize="20sp"
-            android:textOn="On"
-            android:textOff="Off"
+            android:textOn="@string/on"
+            android:textOff="@string/off"
             android:checked="false" />
 
         <android.support.v7.widget.SwitchCompat
@@ -49,10 +49,10 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Noise detection"
+            android:text="@string/noise_detection"
             android:textSize="20sp"
-            android:textOn="On"
-            android:textOff="Off"
+            android:textOn="@string/on"
+            android:textOff="@string/off"
             android:checked="false" />
 
         <TextView
@@ -64,7 +64,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Language"
+            android:text="@string/language"
             android:textSize="20sp"
             android:textColor="@color/black"
             />
@@ -78,7 +78,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Notifies and sound"
+            android:text="@string/notifies_and_sound"
             android:textSize="20sp"
             android:textColor="@color/black"
             />
@@ -92,11 +92,11 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Log out"
+            android:text="@string/log_out"
             android:clickable="true"
             android:textSize="20sp"
             android:textColor="@color/black"
-            />
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/feedback_textView"
@@ -107,7 +107,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Feedback"
+            android:text="@string/feedback"
             android:textSize="20sp"
             android:textColor="@color/black"
             />
@@ -121,7 +121,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:padding="20dp"
-            android:text="Help"
+            android:text="@string/help"
             android:textSize="20sp"
             android:textColor="@color/black"
             />
@@ -129,7 +129,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HomeSecurity v1.0.0"
+            android:text="@string/homeSecurity_v1_0_0"
             android:textColor="@color/black"
             android:layout_gravity="bottom|center"
             android:textSize="12sp"/>

@@ -29,7 +29,7 @@ class CameraFragment: Fragment(), INotificationCallback {
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
-    private val TAG: String = "CameraActivityTag"
+    private val fragmentTAG: String = "CameraFragmentTag"
 
     private lateinit var imageConsumer: ImageConsumer
     private var previewPictures: BlockingQueue<Bitmap> = LinkedBlockingQueue<Bitmap>(15)
@@ -45,13 +45,13 @@ class CameraFragment: Fragment(), INotificationCallback {
     private lateinit var audioConsumer: AudioConsumer
     private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
     private var audioConsumerThread: Thread? = null
-    var rootView: View? = null
+    private var rootView: View? = null
 
     private val previewCallback = Camera.PreviewCallback { data, _ ->
         timeDifference = System.currentTimeMillis() - timeStart
         if (timeDifference >= 500 && isSupervisionStarted) {
             val previewPicture: ByteArray = data ?: run {
-                Log.d(TAG, ("Camera preview picture read did not succeeded, the value is null"))
+                Log.d(fragmentTAG, ("Camera preview picture read did not succeeded, the value is null"))
                 return@PreviewCallback
             }
 
@@ -66,7 +66,7 @@ class CameraFragment: Fragment(), INotificationCallback {
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             } catch (e: InterruptedException) {
-                Log.d(TAG, "Byte array can not put into the queue: ${e.message}")
+                Log.d(fragmentTAG, "Byte array can not put into the queue: ${e.message}")
             }
         }
     }

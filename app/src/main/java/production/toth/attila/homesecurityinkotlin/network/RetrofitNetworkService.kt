@@ -1,7 +1,6 @@
 package production.toth.attila.homesecurityinkotlin.network
 
 import android.content.Context
-import android.net.Uri
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONException
@@ -14,23 +13,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class RetrofitNetworkService(val context: Context) {
 
-    var service: IRetrofitNetworkService
-    var cookie: String? = null
+    private var service: IRetrofitNetworkService
 
     init {
         val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val homeSecBaseUrl = "http://9916405e.ngrok.io"
+        val homeSecBaseUrl = "http://237bfc3a.ngrok.io/"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        // Saját cookie interceptor használata
-        val addCookiesInterceptor = createAddCookiesInterceptor()
-        val receivedCookiesInterceptor = createReceivedCookiesInterceptor()
         val client = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .addInterceptor(AddCookiesInterceptor(context))
@@ -46,31 +40,8 @@ class RetrofitNetworkService(val context: Context) {
                 .create(IRetrofitNetworkService::class.java)
     }
 
-    fun createAddCookiesInterceptor(): Interceptor {
-        return Interceptor {
-            val requestBuilder = it.request().newBuilder()
-            val cookiePreference = context.getSharedPreferences("userCookie", Context.MODE_PRIVATE)
-            cookie = cookiePreference.getString("actualUserCookie", "")
-            if (cookie != null && cookie != "") {
-                requestBuilder.addHeader("Cookie", cookie)
-            }
-            it.proceed(requestBuilder.build())
-        }
-    }
-
-    fun createReceivedCookiesInterceptor(): Interceptor {
-        return Interceptor {
-            val originalRequest = it.proceed(it.request())
-            cookie = originalRequest.header("Set-Cookie")
-            val cookiePreference = context.getSharedPreferences("userCookie", Context.MODE_PRIVATE)
-            val editor  = cookiePreference.edit()
-            editor.clear(); editor.putString("actualUserCookie", cookie); editor.apply();
-            originalRequest
-        }
-    }
-
     fun uploadImage(file: File, emailNotific: Boolean) {
-        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)    //      image/* helyett jpg odaírva
+        val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val body = MultipartBody.Part.createFormData("imageFile", file.name, reqFile)
         val name = RequestBody.create(MediaType.parse("text/plain"), emailNotific.toString())
 
@@ -131,7 +102,7 @@ class RetrofitNetworkService(val context: Context) {
         })
     }
 
-    fun signup(signUpModel: UserSignUpModel, httpCallback: IHttpCallback) {
+    fun signUp(signUpModel: UserSignUpModel, httpCallback: IHttpCallback) {
 
         val req = service.signUp(signUpModel)
         req.enqueue(object : Callback<ResponseBody> {
@@ -149,7 +120,7 @@ class RetrofitNetworkService(val context: Context) {
 
     fun profile(httpCallback: IHttpCallback) {
 
-        var req = service.profile()
+        val req = service.profile()
         req.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
 

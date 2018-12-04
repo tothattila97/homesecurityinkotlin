@@ -15,10 +15,10 @@ import production.toth.attila.homesecurityinkotlin.ui.fragments.NavigationPagerA
 
 class TestActivity : AppCompatActivity() {
 
-    lateinit var viewPager: ViewPager
+    private lateinit var viewPager: ViewPager
     lateinit var bottomNavigationView: BottomNavigationView
     var menuItem:MenuItem ?=null
-    private val PermissionsRequestCode = 123
+    private val permissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,7 @@ class TestActivity : AppCompatActivity() {
 
         val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.SEND_SMS, Manifest.permission.RECORD_AUDIO)
-        managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
+        managePermissions = ManagePermissions(this,list,permissionsRequestCode)
 
         viewPager = findViewById(R.id.viewpager)
         bottomNavigationView = findViewById(R.id.bottom_navigation_view)
@@ -74,7 +74,7 @@ class TestActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PermissionsRequestCode ->{
+            permissionsRequestCode ->{
                 val isPermissionsGranted = managePermissions
                         .processPermissionsResult(requestCode,permissions,grantResults)
 

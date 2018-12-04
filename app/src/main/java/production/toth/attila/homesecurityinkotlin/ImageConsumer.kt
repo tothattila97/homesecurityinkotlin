@@ -12,17 +12,15 @@ import java.io.OutputStream
 import java.util.concurrent.BlockingQueue
 
 class ImageConsumer(
-        private var q: BlockingQueue<Bitmap>,
+        q: BlockingQueue<Bitmap>,
         fragment: Fragment
 ): Runnable {
 
-    val ImageConsumerTAG = "somethingHappened"
-    private var first: Image? = null
-    private var firstbitmap: Bitmap? = null
-    private var second: Image? = null
-    private var secondbitmap: Bitmap? = null
-    var starttime: Long = 0
-    var difference: Long = 0
+    val imageConsumerTAG = "ImageConsumerTAG"
+    private var firstBitmap: Bitmap? = null
+    private var secondBitmap: Bitmap? = null
+    private var startTime: Long = 0
+    private var difference: Long = 0
     private var a: Fragment = fragment
     private var queue: BlockingQueue<Bitmap> = q
 
@@ -34,51 +32,37 @@ class ImageConsumer(
 
     var callback: INotificationCallback = fragment as INotificationCallback
 
-    /*fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
-        callback = activity as INotificationCallback
-        this.a = activity
-        this.queue = q
-        //this.previewQueue = q
-    }*/
+    /*
+    fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
+    callback = activity as INotificationCallback
+    this.a = activity
+    this.queue = q
+    //this.previewQueue = q
+    }
+    */
 
     override fun run() {
         try {
-            secondbitmap = queue.take()
+            secondBitmap = queue.take()
             while (true) {
-                firstbitmap = queue.take()
-                starttime = System.currentTimeMillis()
-                val percent = getDifferenceInPercent(firstbitmap, secondbitmap)
+                firstBitmap = queue.take()
+                startTime = System.currentTimeMillis()
+                val percent = getDifferenceInPercent(firstBitmap, secondBitmap)
                 if (percent > 3) {
-                    //callback.playRingtone()
-                    firstbitmap?.let { fb -> val uploadFile = persistImage( fb, "betoromegtalalva")
+                    firstBitmap?.let { fb -> val uploadFile = persistImage( fb, "RobberFound")
                         val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
                         RetrofitNetworkService(a.context).uploadImage(uploadFile, switchValues.getBoolean("emailSwitch", false))
-                        //callback.sendEmailNotification()
                         //callback.sendSmsNotification()
                     }
-                    //val uploadFile = persistImage( firstbitmap, "betoromegtalalva")
-                    //RetrofitNetworkService(uploadFile)  //TODO: már elérhető az Azure de kredit spórolás céljából ne töltse fel a képeket.
                 }
-                Log.i("homesecurity", "Ekkora volt a két bitmap közötti eltérés %-ban: $percent")
-                difference = System.currentTimeMillis() - starttime
-                Log.i("homesecurity", "Megtörtént az összehasonlítás, ennyi idő volt: " + difference + "ms")
-                secondbitmap = firstbitmap
+                Log.i(imageConsumerTAG, "This is the difference between two bitmaps in percentage: $percent")
+                difference = System.currentTimeMillis() - startTime
+                Log.i(imageConsumerTAG, "Comparision was happened, elapsed time was: " + difference + "ms")
+                secondBitmap = firstBitmap
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    private fun isDifferent(firstRed: Int, firstGreen: Int, firstBlue: Int, secondRed: Int, secondGreen: Int, secondBlue: Int): Boolean {
-        val firstAverageR = (firstRed / 400).toDouble()
-        val firstAverageG = (firstGreen / 400).toDouble()
-        val firstAverageB = (firstBlue / 400).toDouble()
-        val secondAverageR = (secondRed / 400).toDouble()
-        val secondAverageG = (secondGreen / 400).toDouble()
-        val secondAverageB = (secondBlue / 400).toDouble()
-        return Math.abs(firstAverageR / secondAverageR - 1) > 0.30 ||
-                Math.abs(firstAverageG / secondAverageG - 1) > 0.30 ||
-                Math.abs(firstAverageB / secondAverageB - 1) > 0.30
     }
 
     private fun getDifferenceInPercent(bmp1: Bitmap?, bmp2: Bitmap?): Double {

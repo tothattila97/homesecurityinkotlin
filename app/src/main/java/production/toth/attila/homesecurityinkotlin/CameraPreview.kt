@@ -13,7 +13,7 @@ class CameraPreview(
         private val previewCallback: Camera.PreviewCallback
 ) : SurfaceView(context), SurfaceHolder.Callback {
 
-    private val TAG: String = "CameraPreviewTag"
+    private val previewTAG: String = "CameraPreviewTag"
 
     private val mHolder: SurfaceHolder = holder.apply {
         // Install a SurfaceHolder.Callback so we get notified when the
@@ -32,7 +32,7 @@ class CameraPreview(
 
                 startFaceDetection()
             } catch (e: IOException) {
-                Log.d(TAG, "Error setting camera preview: ${e.message}")
+                Log.d(previewTAG, "Error setting camera preview: ${e.message}")
             }
         }
     }
@@ -68,20 +68,20 @@ class CameraPreview(
 
                 startFaceDetection()
             } catch (e: Exception) {
-                Log.d(TAG, "Error starting camera preview: ${e.message}")
+                Log.d(previewTAG, "Error starting camera preview: ${e.message}")
             }
         }
     }
 
     fun startFaceDetection() {
         // Try starting Face Detection
-        val params = mCamera?.parameters
+        val params = mCamera.parameters
         // start face detection only *after* preview has started
 
         params?.apply {
             if (maxNumDetectedFaces > 0) {
                 // camera supports face detection, so can start it:
-                mCamera?.startFaceDetection()
+                mCamera.startFaceDetection()
             }
         }
     }

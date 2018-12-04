@@ -11,26 +11,26 @@ interface IRetrofitNetworkService {
 
     @Multipart
     @POST("api/upload/")
-    abstract fun postImage(@Part imageFile: MultipartBody.Part, @Part("isNotifiableByEmail") isNotifiableByEmail: RequestBody ): Call<ResponseBody>
+    fun postImage(@Part imageFile: MultipartBody.Part, @Part("isNotifiableByEmail") isNotifiableByEmail: RequestBody ): Call<ResponseBody>
 
     @POST("api/account/login")
-    abstract fun login(@Body loginModel: UserLoginModel): Call<ResponseBody>
+    fun login(@Body loginModel: UserLoginModel): Call<ResponseBody>
 
-    @POST("api/account/signup")
-    abstract fun signUp(@Body signUpModel: UserSignUpModel): Call<ResponseBody>
+    @POST("api/account/signUp")
+    fun signUp(@Body signUpModel: UserSignUpModel): Call<ResponseBody>
 
     @POST("api/account/logout")
-    abstract fun logOut() : Call<ResponseBody>
+    fun logOut() : Call<ResponseBody>
 
     @GET("api/profile")
-    abstract fun profile(): Call<ResponseBody>
+    fun profile(): Call<ResponseBody>
 
     @PUT("api/profile")
-    abstract fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
+    fun profileUpdate(@Body model: UserProfileUpdateModel): Call<ResponseBody>
 
     @GET("api/account/changepassword")
-    abstract fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
+    fun changePassword(@Body changePasswordModel: ChangePasswordModel): Call<ResponseBody>
 
     @DELETE ("api/account/deleteaccount")
-    abstract fun deleteAccount(): Call<ResponseBody>
+    fun deleteAccount(): Call<ResponseBody>
 }

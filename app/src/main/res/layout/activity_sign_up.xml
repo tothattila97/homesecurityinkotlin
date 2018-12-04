@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="First name" />
+                android:hint="@string/first_name" />
         </android.support.design.widget.TextInputLayout>
 
         <!--  UserName Label -->
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Last name" />
+                android:hint="@string/last_name" />
         </android.support.design.widget.TextInputLayout>
 
         <!--  UserName Label -->
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Username" />
+                android:hint="@string/username" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Email Label -->
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="Email" />
+                android:hint="@string/email" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Password"/>
+                android:hint="@string/password"/>
         </android.support.design.widget.TextInputLayout>
         
         <android.support.design.widget.TextInputLayout
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Confirm Password"/>
+                android:hint="@string/confirm_password"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
-                android:hint="Notifiable phone number"/>
+                android:hint="@string/notifiable_phone_number"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:inputType="datetime"
-                android:hint="Date of birth"/>
+                android:hint="@string/date_of_birth"/>
         </android.support.design.widget.TextInputLayout>
 
         <RadioGroup
@@ -132,19 +132,19 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Man"/>
+                android:text="@string/man"/>
             <RadioButton
                 android:id="@+id/gender_woman"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Woman"/>
+                android:text="@string/woman"/>
             <RadioButton
                 android:id="@+id/gender_notBinary"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Not binary"/>
+                android:text="@string/not_binary"/>
 
         </RadioGroup>
 
@@ -155,15 +155,15 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Create Account"/>
+            android:text="@string/create_account"/>
 
         <TextView android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Already a member? Login"
+            android:text="@string/already_a_member_login"
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 </ScrollView>

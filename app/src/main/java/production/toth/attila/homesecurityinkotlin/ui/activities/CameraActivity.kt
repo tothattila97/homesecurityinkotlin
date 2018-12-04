@@ -7,8 +7,6 @@ import android.graphics.*
 import android.hardware.Camera
 import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
-import android.media.AudioFormat
-import android.media.AudioRecord
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.os.Environment
@@ -39,48 +37,22 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
 
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
-    private val TAG: String = "CameraActivityTag"
+    private val activityTAG: String = "CameraActivityTag"
 
-    private val PermissionsRequestCode = 123
+    private val permissionsRequestCode = 123
     private lateinit var managePermissions: ManagePermissions
     private lateinit var imageConsumer: ImageConsumer
     private var previewPictures: BlockingQueue<Bitmap>  = LinkedBlockingQueue<Bitmap>(15)
     private var timeStart: Long = 0; private var timeDifference: Long = 0
     private var isSupervisionStarted: Boolean = false
-
-    private val RECORDER_SAMPLERATE = 8000
-    private val RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO
-    private val RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
-    private var recorder: AudioRecord? = null
-    private val bufferElementsToRec = 1024 // want to play 2048 (2K) since 2 bytes we use only 1024
-    private val bytesPerElement = 2 // 2 bytes in 16bit format
-    private lateinit var audioConsumer: AudioConsumer
-    private var audiosInByteArray: BlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>()
-    private var audioConsumerThread: Thread? = null
+    
     private lateinit var bottomNavigationView: BottomNavigationView
-
-    private val mPicture = PictureCallback { data, _ ->
-        val pictureFile: File = getOutputMediaFile(MEDIA_TYPE_IMAGE) ?: run {
-            Log.d(TAG, ("Error creating media file, check storage permissions"))
-            return@PictureCallback
-        }
-
-        try {
-            val fos = FileOutputStream(pictureFile)
-            fos.write(data)
-            fos.close()
-        } catch (e: FileNotFoundException) {
-            Log.d(TAG, "File not found: ${e.message}")
-        } catch (e: IOException) {
-            Log.d(TAG, "Error accessing file: ${e.message}")
-        }
-    }
 
     private val previewCallback = PreviewCallback { data, _ ->
         timeDifference = System.currentTimeMillis() - timeStart
         if (timeDifference >= 500 && isSupervisionStarted){
             val previewPicture: ByteArray = data ?: run {
-                Log.d(TAG, ("Camera preview read did not succeeded, the value is null"))
+                Log.d(activityTAG, ("Camera preview read did not succeeded, the value is null"))
                 return@PreviewCallback
             }
 
@@ -97,7 +69,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             }catch (e: InterruptedException){
-                Log.d(TAG, "Byte array can not put into the queue: ${e.message}")
+                Log.d(activityTAG, "Byte array can not put into the queue: ${e.message}")
             }
         }
     }
@@ -107,7 +79,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         setContentView(R.layout.activity_camera)
 
         val list = listOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        managePermissions = ManagePermissions(this,list,PermissionsRequestCode)
+        managePermissions = ManagePermissions(this,list,permissionsRequestCode)
 
         //imageConsumer = ImageConsumer(previewPictures, this)
         //audioConsumer = AudioConsumer(audiosInByteArray, this)
@@ -160,11 +132,6 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         }
     }
 
-    /** Check if this device has a camera */
-    private fun checkCameraHardware(context: Context): Boolean {
-        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-    }
-
     /** A safe way to get an instance of the Camera object. */
     private fun getCameraInstance(): Camera? {
         return try {
@@ -212,7 +179,7 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PermissionsRequestCode ->{
+            permissionsRequestCode ->{
                 val isPermissionsGranted = managePermissions
                         .processPermissionsResult(requestCode,permissions,grantResults)
 

@@ -25,22 +25,22 @@ class SignUpActivity : AppCompatActivity() {
         val TAG = "SignUpActivity"
     }
 
-    lateinit var usernameText: EditText
-    lateinit var emailText: EditText
-    lateinit var passwordText: EditText
-    lateinit var confirmPasswordText: EditText
-    lateinit var phoneNumber: EditText
-    lateinit var dateOfBirth: EditText
-    lateinit var firstName: EditText
-    lateinit var lastName: EditText
-    lateinit var genderRadioGroup: RadioGroup
-    lateinit var manGenderRadio: RadioButton
-    lateinit var womanGenderRadio: RadioButton
-    lateinit var notBinaryGenderRadio: RadioButton
-    lateinit var signUpButton: Button
-    lateinit var loginLink: TextView
-    var birthCalendar = Calendar.getInstance()
-    var dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH)
+    private lateinit var usernameText: EditText
+    private lateinit var emailText: EditText
+    private lateinit var passwordText: EditText
+    private lateinit var confirmPasswordText: EditText
+    private lateinit var phoneNumber: EditText
+    private lateinit var dateOfBirth: EditText
+    private lateinit var firstName: EditText
+    private lateinit var lastName: EditText
+    private lateinit var genderRadioGroup: RadioGroup
+    private lateinit var manGenderRadio: RadioButton
+    private lateinit var womanGenderRadio: RadioButton
+    private lateinit var notBinaryGenderRadio: RadioButton
+    private lateinit var signUpButton: Button
+    private lateinit var loginLink: TextView
+    private var birthCalendar = Calendar.getInstance()
+    private var dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,7 +120,7 @@ class SignUpActivity : AppCompatActivity() {
 
         val signUpService = RetrofitNetworkService(baseContext)
         val signUpModel = UserSignUpModel(email, name, password,confirmPassword,phoneNumber, dateOfBirth, gender, firstName, lastName)
-        signUpService.signup(signUpModel, object : IHttpCallback {
+        signUpService.signUp(signUpModel, object : IHttpCallback {
             override fun getIsSucceeded(succeeded: Boolean) {
                 if(succeeded){
                     Handler().postDelayed(
@@ -128,7 +128,7 @@ class SignUpActivity : AppCompatActivity() {
                                 // On complete call either onSignUpSuccess or onSignUpFailed
                                 // depending on success
                                 onSignUpSuccess()
-                                // onSignupFailed();
+                                // onSignUpFailed();
                                 progressDialog.dismiss()
                             }, 2000)
                 }
@@ -147,7 +147,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun onSignUpFailed() {
-        Toast.makeText(baseContext, "Login failed", Toast.LENGTH_LONG).show()
+        Toast.makeText(baseContext, "Registration failed", Toast.LENGTH_LONG).show()
         signUpButton.isEnabled = true
     }
 
