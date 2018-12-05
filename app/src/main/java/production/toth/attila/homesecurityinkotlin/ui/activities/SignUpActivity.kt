@@ -128,15 +128,16 @@ class SignUpActivity : AppCompatActivity() {
                                 // On complete call either onSignUpSuccess or onSignUpFailed
                                 // depending on success
                                 onSignUpSuccess()
-                                // onSignUpFailed();
                                 progressDialog.dismiss()
                             }, 2000)
                 }
-                else
-                    Toast.makeText(baseContext, "Registration failed. Try again!", Toast.LENGTH_SHORT).show()
+                else {
+                    progressDialog.dismiss()
+                    onSignUpFailed()
+                }
             }
 
-            override fun getUserProfile(userProfile: UserProfileModel?) {}
+            override fun getUserProfile(userProfile: UserProfileModel?) {/*Unnecessary in this case*/}
         })
     }
 
@@ -147,7 +148,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun onSignUpFailed() {
-        Toast.makeText(baseContext, "Registration failed", Toast.LENGTH_LONG).show()
+        Toast.makeText(baseContext, "Registration failed. Try again!", Toast.LENGTH_LONG).show()
         signUpButton.isEnabled = true
     }
 

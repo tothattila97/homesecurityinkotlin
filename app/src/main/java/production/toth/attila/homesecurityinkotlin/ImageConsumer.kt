@@ -2,7 +2,6 @@ package production.toth.attila.homesecurityinkotlin
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.media.Image
 import android.support.v4.app.Fragment
 import android.util.Log
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
@@ -31,15 +30,6 @@ class ImageConsumer(
     }*/
 
     var callback: INotificationCallback = fragment as INotificationCallback
-
-    /*
-    fun ImageConsumer(q: BlockingQueue<Bitmap>, activity: Activity) {
-    callback = activity as INotificationCallback
-    this.a = activity
-    this.queue = q
-    //this.previewQueue = q
-    }
-    */
 
     override fun run() {
         try {

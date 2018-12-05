@@ -26,11 +26,6 @@ class AddCookiesInterceptor(// We're storing our stuff in a database made just f
         }
         builder.addHeader("Cookie", cookieString)
 
-
-       /* for (cookie in preferences) {
-            builder.addHeader("Cookie", cookie)
-        }*/
-
         return chain.proceed(builder.build())
     }
 

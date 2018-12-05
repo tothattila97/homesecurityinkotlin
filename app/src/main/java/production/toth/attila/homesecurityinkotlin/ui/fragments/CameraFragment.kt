@@ -112,7 +112,6 @@ class CameraFragment: Fragment(), INotificationCallback {
         // Set the Preview view as the content of our activity.
         mPreview?.also {
             val preview: FrameLayout = rootView!!.findViewById(R.id.camera_preview)
-            //if(it.parent != null) { (it.parent as ViewGroup).removeView(it)}
             preview.addView(it)
         }
 

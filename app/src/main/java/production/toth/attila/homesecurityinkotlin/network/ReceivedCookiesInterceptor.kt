@@ -7,7 +7,7 @@ import okhttp3.Response
 import java.io.IOException
 
 
-class ReceivedCookiesInterceptor(private val context: Context) // AddCookiesInterceptor()
+class ReceivedCookiesInterceptor(private val context: Context)
     : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {

@@ -2,16 +2,11 @@ package production.toth.attila.homesecurityinkotlin.ui.activities
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.Camera
-import android.hardware.Camera.PictureCallback
 import android.hardware.Camera.PreviewCallback
 import android.media.RingtoneManager
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -24,9 +19,7 @@ import production.toth.attila.homesecurityinkotlin.ui.fragments.AboutFragment
 import production.toth.attila.homesecurityinkotlin.ui.fragments.CameraFragment
 import production.toth.attila.homesecurityinkotlin.ui.fragments.ProfileFragment
 import production.toth.attila.homesecurityinkotlin.ui.fragments.SettingsFragment
-import java.io.*
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -64,8 +57,6 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
                 yuvImage.compressToJpeg(Rect(0,0, width,height), 50, out)
                 val ujpreviewPicture = out.toByteArray()
                 val bitmap = BitmapFactory.decodeByteArray(ujpreviewPicture, 0, ujpreviewPicture.size)
-
-                //val bitmap: Bitmap = BitmapFactory.decodeByteArray(previewPicture , 0, previewPicture.size, null)
                 previewPictures.put(bitmap)
                 timeStart = System.currentTimeMillis()
             }catch (e: InterruptedException){
@@ -139,41 +130,6 @@ class CameraActivity : AppCompatActivity(), INotificationCallback {
         } catch (e: Exception) {
             // Camera is not available (in use or does not exist)
             null // returns null if camera is unavailable
-        }
-    }
-
-    /** Create a File for saving an image or video */
-    private fun getOutputMediaFile(type: Int): File? {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        val mediaStorageDir = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "HomeSecurityKotlin"
-        )
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        mediaStorageDir.apply {
-            if (!exists()) {
-                if (!mkdirs()) {
-                    Log.d("MyCameraApp", "failed to create directory")
-                    return null
-                }
-            }
-        }
-
-        // Create a media file name
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        return when (type) {
-            MEDIA_TYPE_IMAGE -> {
-                File("${mediaStorageDir.path}${File.separator}IMG_$timeStamp.jpg")
-            }
-            MEDIA_TYPE_VIDEO -> {
-                File("${mediaStorageDir.path}${File.separator}VID_$timeStamp.mp4")
-            }
-            else -> null
         }
     }
 

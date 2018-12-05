@@ -21,7 +21,7 @@ class RetrofitNetworkService(val context: Context) {
 
     init {
         val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val homeSecBaseUrl = "http://237bfc3a.ngrok.io/"
+        val homeSecBaseUrl = "http://65c25c8a.ngrok.io"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -46,7 +46,7 @@ class RetrofitNetworkService(val context: Context) {
         val name = RequestBody.create(MediaType.parse("text/plain"), emailNotific.toString())
 
         val uploadService = Retrofit.Builder()
-                .baseUrl("http://9916405e.ngrok.io")
+                .baseUrl("http://65c25c8a.ngrok.io")
                 .client(OkHttpClient.Builder()
                         .addInterceptor(HttpLoggingInterceptor())
                         .addInterceptor(AddCookiesInterceptor(context))
@@ -61,9 +61,7 @@ class RetrofitNetworkService(val context: Context) {
         val req = uploadService.postImage(body, name)
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if(response.isSuccessful){
-
-                }
+                if(response.isSuccessful) {/*Notification when upload was succeeded*/}
             }
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) { t.printStackTrace() }
         })
@@ -88,7 +86,6 @@ class RetrofitNetworkService(val context: Context) {
     fun logout(httpCallback: IHttpCallback) {
 
         val req = service.logOut()
-        var succeeded = false
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful){

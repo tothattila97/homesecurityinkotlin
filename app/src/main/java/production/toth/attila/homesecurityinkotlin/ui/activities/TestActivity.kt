@@ -51,8 +51,7 @@ class TestActivity : AppCompatActivity() {
         }
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+            override fun onPageScrollStateChanged(state: Int) {/*required method overload */}
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 if(menuItem != null){
@@ -64,10 +63,7 @@ class TestActivity : AppCompatActivity() {
                 bottomNavigationView.menu.getItem(position).isChecked = true
                 menuItem = bottomNavigationView.menu.getItem(position)
             }
-            override fun onPageSelected(position: Int) {
-
-            }
-
+            override fun onPageSelected(position: Int) {/*required method overload*/}
         })
         managePermissions.checkPermissions()
     }

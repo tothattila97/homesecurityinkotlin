@@ -1,5 +1,6 @@
 package production.toth.attila.homesecurityinkotlin.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -34,9 +35,12 @@ class ProfileFragment: Fragment() {
         profileGender = rootView.findViewById(R.id.profile_gender)
 
         RetrofitNetworkService(context).profile(object : IHttpCallback {
-            override fun getIsSucceeded(succeeded: Boolean) {}
+            override fun getIsSucceeded(succeeded: Boolean) {/*Unnecessary in this case*/}
+            @SuppressLint("SetTextI18n")
             override fun getUserProfile(userProfile: UserProfileModel?) {
-                profileName.text = "${userProfile?.firstName} ${userProfile?.lastName}"
+                val firstName = userProfile?.firstName
+                val lastName = userProfile?.lastName
+                profileName.text = "$firstName $lastName"
                 profileEmail.text = userProfile?.email
                 profilePhoneNumber.text = userProfile?.phoneNumber
                 profileBirthDate.text = userProfile?.dateOfBirth.toString()

@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity(){
                         startActivity(automaticLogInIntent)
                     }
                 }
-                override fun getUserProfile(userProfile: UserProfileModel?) {}
+                override fun getUserProfile(userProfile: UserProfileModel?) {/* Unnecessary in this case*/}
             })
         }
 
@@ -95,32 +95,33 @@ class LoginActivity : AppCompatActivity(){
                             {
                                 // On complete call either onLoginSuccess or onLoginFailed
                                 onLoginSuccess()
-                                // onLoginFailed();
                                 progressDialog.dismiss()
                             }, 2000)
                 }
-                else
-                    Toast.makeText(applicationContext, "Login failed. Try again!", Toast.LENGTH_SHORT).show()
+                else{
+                    progressDialog.dismiss()
+                    onLoginFailed()
+                }
             }
-            override fun getUserProfile(userProfile: UserProfileModel?) {}
+            override fun getUserProfile(userProfile: UserProfileModel?) {/* Unnecessary in this case*/}
         })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         try {
-            if (requestCode == REQUEST_SIGNUP) {
-                if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_SIGNUP && resultCode == Activity.RESULT_OK) {
+                //if (resultCode == Activity.RESULT_OK) {
                     // By default we just finish the Activity and log them in automatically
                     val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
                     val editor  = userLogin.edit()
                     editor.clear()
                     editor.putString("userName", emailText.text.toString())
                     editor.putString("password", passwordText.text.toString())
-                    editor.apply()  // editor.commit()
+                    editor.apply()
                     val cameraIntent = Intent(applicationContext, TestActivity::class.java)
                     startActivity(cameraIntent)
                     //this.finish()
-                }
+                //}
             }
         }catch (ex : Exception){
             Toast.makeText(this, ex.toString(),
@@ -140,7 +141,7 @@ class LoginActivity : AppCompatActivity(){
         editor.clear()
         editor.putString("userName", emailText.text.toString())
         editor.putString("password", passwordText.text.toString())
-        editor.apply()  // editor.commit()
+        editor.apply()
         val cameraIntent = Intent(applicationContext, TestActivity::class.java)
         startActivity(cameraIntent)
         finish()

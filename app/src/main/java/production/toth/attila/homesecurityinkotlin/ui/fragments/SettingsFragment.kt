@@ -71,7 +71,7 @@ class SettingsFragment: Fragment(){
                         Toast.makeText(context, "Log out failed. Try again!", Toast.LENGTH_SHORT).show()
                 }
 
-                override fun getUserProfile(userProfile: UserProfileModel?) {}
+                override fun getUserProfile(userProfile: UserProfileModel?) {/*Unnecessary in this case */}
             })
         }
 
