@@ -36,11 +36,10 @@ class ProfileFragment: Fragment() {
 
         RetrofitNetworkService(context).profile(object : IHttpCallback {
             override fun getIsSucceeded(succeeded: Boolean) {/*Unnecessary in this case*/}
-            @SuppressLint("SetTextI18n")
             override fun getUserProfile(userProfile: UserProfileModel?) {
                 val firstName = userProfile?.firstName
                 val lastName = userProfile?.lastName
-                profileName.text = "$firstName $lastName"
+                profileName.text = firstName + " " + lastName
                 profileEmail.text = userProfile?.email
                 profilePhoneNumber.text = userProfile?.phoneNumber
                 profileBirthDate.text = userProfile?.dateOfBirth.toString()

@@ -2,6 +2,8 @@ package production.toth.attila.homesecurityinkotlin
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.support.media.ExifInterface
 import android.support.v4.app.Fragment
 import android.util.Log
 import production.toth.attila.homesecurityinkotlin.network.RetrofitNetworkService
@@ -20,6 +22,7 @@ class ImageConsumer(
     private var secondBitmap: Bitmap? = null
     private var startTime: Long = 0
     private var difference: Long = 0
+    private var lastTime: Long = 0
     private var a: Fragment = fragment
     private var queue: BlockingQueue<Bitmap> = q
 
@@ -33,18 +36,24 @@ class ImageConsumer(
 
     override fun run() {
         try {
+            lastTime = System.currentTimeMillis()
             secondBitmap = queue.take()
             while (true) {
                 firstBitmap = queue.take()
                 startTime = System.currentTimeMillis()
                 val percent = getDifferenceInPercent(firstBitmap, secondBitmap)
-                if (percent > 3) {
-                    firstBitmap?.let { fb -> val uploadFile = persistImage( fb, "RobberFound")
-                        val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
-                        RetrofitNetworkService(a.context).uploadImage(uploadFile, switchValues.getBoolean("emailSwitch", false))
-                        //callback.sendSmsNotification()
-                    }
+                val actualTime = System.currentTimeMillis()
+                if (percent > 3 && actualTime-lastTime > 1000) {
+                        lastTime = System.currentTimeMillis()
+                        firstBitmap?.let { val m = Matrix(); m.postRotate(90f)
+                            val rotatedBitmap = Bitmap.createBitmap(firstBitmap,0,0,firstBitmap!!.width,firstBitmap!!.height, m, true)
+                            val rotatedUploadFile = persistImage( rotatedBitmap, "RobberFound")
+                            val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
+                            RetrofitNetworkService(a.context).uploadImage(rotatedUploadFile, switchValues.getBoolean("emailSwitch", false))
+                            //callback.sendSmsNotification()
+                        }
                 }
+
                 Log.i(imageConsumerTAG, "This is the difference between two bitmaps in percentage: $percent")
                 difference = System.currentTimeMillis() - startTime
                 Log.i(imageConsumerTAG, "Comparision was happened, elapsed time was: " + difference + "ms")
@@ -52,6 +61,15 @@ class ImageConsumer(
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun exifToDegrees(exifOrientation: Int): Int{
+        return when (exifOrientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270
+            else -> 0
         }
     }
 

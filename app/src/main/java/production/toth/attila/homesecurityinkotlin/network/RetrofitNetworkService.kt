@@ -21,7 +21,7 @@ class RetrofitNetworkService(val context: Context) {
 
     init {
         val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val homeSecBaseUrl = "http://65c25c8a.ngrok.io"
+        val homeSecBaseUrl = "http://a47526e5.ngrok.io"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -46,7 +46,7 @@ class RetrofitNetworkService(val context: Context) {
         val name = RequestBody.create(MediaType.parse("text/plain"), emailNotific.toString())
 
         val uploadService = Retrofit.Builder()
-                .baseUrl("http://65c25c8a.ngrok.io")
+                .baseUrl("http://a47526e5.ngrok.io")
                 .client(OkHttpClient.Builder()
                         .addInterceptor(HttpLoggingInterceptor())
                         .addInterceptor(AddCookiesInterceptor(context))
