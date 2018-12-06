@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import production.toth.attila.homesecurityinkotlin.*
+import production.toth.attila.homesecurityinkotlin.AudioConsumer
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue

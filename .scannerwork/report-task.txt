@@ -2,5 +2,5 @@ projectKey=home:security:inkotlin
 serverUrl=http://localhost:9000
 serverVersion=6.7.3.38370
 dashboardUrl=http://localhost:9000/dashboard/index/home:security:inkotlin
-ceTaskId=AWd7i4lKYotD2IKJ9k-S
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWd7i4lKYotD2IKJ9k-S
+ceTaskId=AWeAP2Qi4DXQzJBEsjfq
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWeAP2Qi4DXQzJBEsjfq
