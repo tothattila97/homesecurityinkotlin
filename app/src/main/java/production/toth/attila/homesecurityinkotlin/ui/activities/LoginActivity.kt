@@ -39,21 +39,6 @@ class LoginActivity : AppCompatActivity(){
         loginButton = findViewById(R.id.btn_login)
         signUpLink = findViewById(R.id.link_signUp)
 
-        val userLogin = getSharedPreferences("userLogin", Context.MODE_PRIVATE)
-        val userName = userLogin.getString("userName","")
-        val password = userLogin.getString("password","")
-        if (userName != "" && password != ""){
-            RetrofitNetworkService(baseContext).login(UserLoginModel(userName,password), object : IHttpCallback {
-                override fun getIsSucceeded(succeeded: Boolean) {
-                    if (succeeded){
-                        val automaticLogInIntent = Intent(baseContext, TestActivity::class.java)
-                        startActivity(automaticLogInIntent)
-                    }
-                }
-                override fun getUserProfile(userProfile: UserProfileModel?) {/* Unnecessary in this case*/}
-            })
-        }
-
         loginButton.setOnClickListener {
             login()
         }
@@ -165,8 +150,8 @@ class LoginActivity : AppCompatActivity(){
             emailText.error = null
         }
 
-        if (password.isEmpty() || password.length < 4 || password.length > 10) {
-            passwordText.error = "between 4 and 10 alphanumeric characters"
+        if (password.isEmpty() || password.length < 8) {
+            passwordText.error = "at least 8 characters"
             valid = false
         } else {
             passwordText.error = null

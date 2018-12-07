@@ -174,15 +174,16 @@ class SignUpActivity : AppCompatActivity() {
             emailText.error = null
         }
 
-        if (password.isEmpty() || password.length < 4 || password.length > 10) {
-            passwordText.error = "between 4 and 10 alphanumeric characters"
+        val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$")
+        if (password.isEmpty() || password.length < 8 || !passwordRegex.matches(password)) {
+            passwordText.error = "at least 8 characters, contains 1 lower, 1 upper character and 1 alphanum"
             valid = false
         } else {
             passwordText.error = null
         }
 
-        if(confirmPassword.isEmpty() || confirmPassword.length < 4 || confirmPassword.length > 10){
-            confirmPasswordText.error = "between 4 and 10 alphanumeric characters"
+        if(confirmPassword.isEmpty() || confirmPassword.length < 8 || !passwordRegex.matches(password)){
+            confirmPasswordText.error = "at least 8 characters, contains 1 lower, 1 upper character and 1 alphanum"
             valid = false
         }
         else if(!confirmPassword.equals(password)) {
@@ -200,5 +201,11 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun convertStringToDate(timeInString : String): Date{
         return dateFormat.parse(timeInString)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 }

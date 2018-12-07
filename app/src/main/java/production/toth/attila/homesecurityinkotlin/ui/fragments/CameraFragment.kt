@@ -197,9 +197,10 @@ class CameraFragment: Fragment(), INotificationCallback {
 
         val userLogin = context.getSharedPreferences("userLogin", Context.MODE_PRIVATE)
         val phoneNumber = userLogin.getString("userLogin", "")
-        val message = "Something happened in your home. Please check your uploaded images."
-
-        manager.sendTextMessage(phoneNumber, null, message, piSend, piDelivered)
+        val message = "Something happened in your home. Please check your uploaded images on our website."
+        if (phoneNumber != ""){
+            manager.sendTextMessage(phoneNumber, null, message, piSend, piDelivered)
+        }
     }
 
     internal class MyFaceDetectionListener : Camera.FaceDetectionListener {

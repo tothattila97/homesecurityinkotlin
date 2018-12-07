@@ -4,11 +4,12 @@
     package="production.toth.attila.homesecurityinkotlin">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -21,18 +22,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.activities.LoginActivity">
+        <activity android:name=".ui.activities.LoginActivity" />
+        <activity
+            android:name=".ui.activities.CameraActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ui.activities.SignUpActivity" />
+        <activity android:name=".ui.activities.TestActivity" />
+        <activity android:name=".ui.activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activities.CameraActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".ui.activities.SignUpActivity" />
-        <activity android:name=".ui.activities.TestActivity" />
     </application>
 
 </manifest>

@@ -20,8 +20,8 @@ class RetrofitNetworkService(val context: Context) {
     private var service: IRetrofitNetworkService
 
     init {
-        val baseUrl = "https://imagestorageinblobdemo20180417110725.azurewebsites.net/"
-        val homeSecBaseUrl = "http://a47526e5.ngrok.io"
+        val baseUrl = "https://homesecuritythesis.azurewebsites.net/"
+        val homeSecBaseUrl = "http://1787eac8.ngrok.io/"
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -33,7 +33,7 @@ class RetrofitNetworkService(val context: Context) {
                 .readTimeout(40, TimeUnit.SECONDS)
                 .build()
         service = Retrofit.Builder()
-                .baseUrl(homeSecBaseUrl)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
@@ -43,10 +43,10 @@ class RetrofitNetworkService(val context: Context) {
     fun uploadImage(file: File, emailNotific: Boolean) {
         val reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val body = MultipartBody.Part.createFormData("imageFile", file.name, reqFile)
-        val name = RequestBody.create(MediaType.parse("text/plain"), emailNotific.toString())
+        val newName = RequestBody.create(okhttp3.MultipartBody.FORM, emailNotific.toString())
 
         val uploadService = Retrofit.Builder()
-                .baseUrl("http://a47526e5.ngrok.io")
+                .baseUrl("https://homesecuritythesis.azurewebsites.net/")
                 .client(OkHttpClient.Builder()
                         .addInterceptor(HttpLoggingInterceptor())
                         .addInterceptor(AddCookiesInterceptor(context))
@@ -57,8 +57,7 @@ class RetrofitNetworkService(val context: Context) {
                 .build()
                 .create(IRetrofitNetworkService::class.java)
 
-
-        val req = uploadService.postImage(body, name)
+        val req = uploadService.postImage(body, newName)
         req.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful) {/*Notification when upload was succeeded*/}

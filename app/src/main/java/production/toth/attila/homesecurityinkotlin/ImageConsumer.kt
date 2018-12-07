@@ -23,6 +23,7 @@ class ImageConsumer(
     private var startTime: Long = 0
     private var difference: Long = 0
     private var lastTime: Long = 0
+    private var smsLastTime: Long = 0
     private var a: Fragment = fragment
     private var queue: BlockingQueue<Bitmap> = q
 
@@ -37,6 +38,7 @@ class ImageConsumer(
     override fun run() {
         try {
             lastTime = System.currentTimeMillis()
+            smsLastTime = 0
             secondBitmap = queue.take()
             while (true) {
                 firstBitmap = queue.take()
@@ -50,7 +52,11 @@ class ImageConsumer(
                             val rotatedUploadFile = persistImage( rotatedBitmap, "RobberFound")
                             val switchValues = a.activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
                             RetrofitNetworkService(a.context).uploadImage(rotatedUploadFile, switchValues.getBoolean("emailSwitch", false))
-                            //callback.sendSmsNotification()
+
+                            if(actualTime-smsLastTime > 1800000 && switchValues.getBoolean("smsSwitch", false)) {
+                                smsLastTime = System.currentTimeMillis()
+                                callback.sendSmsNotification()
+                            }
                         }
                 }
 

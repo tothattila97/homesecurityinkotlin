@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import production.toth.attila.homesecurityinkotlin.ManagePermissions
 import production.toth.attila.homesecurityinkotlin.R
@@ -24,7 +25,8 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
-
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        
         val list = listOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.SEND_SMS, Manifest.permission.RECORD_AUDIO)
         managePermissions = ManagePermissions(this,list,permissionsRequestCode)

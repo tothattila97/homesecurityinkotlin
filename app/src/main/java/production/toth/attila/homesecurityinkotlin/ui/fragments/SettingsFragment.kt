@@ -21,10 +21,8 @@ class SettingsFragment: Fragment(){
     private lateinit var rootView:View
     private lateinit var emailSwitch: SwitchCompat
     private lateinit var smsSwitch: SwitchCompat
-    private lateinit var noiseSwitch: SwitchCompat
     private lateinit var helpTextView: TextView
     private lateinit var feedbackTextView: TextView
-    private lateinit var languageTextView: TextView
     private lateinit var logOutTextView: TextView
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,14 +42,6 @@ class SettingsFragment: Fragment(){
             editor.putBoolean("smsSwitch", smsSwitch.isChecked)
             editor.apply()
         }
-        noiseSwitch = rootView.findViewById(R.id.noise_switch)
-        noiseSwitch.setOnClickListener {
-            val switchesValues =  activity.getSharedPreferences("switchesValues", Context.MODE_PRIVATE)
-            val editor  = switchesValues.edit()
-            editor.putBoolean("noiseSwitch", noiseSwitch.isChecked)
-            editor.apply()
-        }
-        languageTextView = rootView.findViewById(R.id.languageSetting_textView)
         feedbackTextView = rootView.findViewById(R.id.feedback_textView)
         helpTextView = rootView.findViewById(R.id.help_textView)
         logOutTextView = rootView.findViewById(R.id.log_out_textView)
